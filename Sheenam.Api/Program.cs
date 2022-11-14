@@ -3,6 +3,8 @@
 // Free to use comfort and pease
 // ---------------------------------------------------
 
+using Sheenam.Api.Brokers.Storages;
+
 namespace Sheenam.Api
 {
     public class Program
@@ -11,6 +13,7 @@ namespace Sheenam.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddDbContext<StorageBroker>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
