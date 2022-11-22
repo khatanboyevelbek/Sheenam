@@ -1,9 +1,4 @@
-﻿// ---------------------------------------------------
-// Copyright (c) Coalition of Good-hearted Engineers
-// Free to use comfort and pease
-// ---------------------------------------------------
-
-using System;
+﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
