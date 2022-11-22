@@ -1,6 +1,6 @@
 ﻿// ---------------------------------------------------
 // Copyright (c) Coalition of Good-hearted Engineers
-// Free to use comfort and pease
+// Free to use to find comfort and pease
 // ---------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
