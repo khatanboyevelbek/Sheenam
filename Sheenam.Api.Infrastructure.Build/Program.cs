@@ -68,7 +68,7 @@ namespace Sheenam.Api.Infrastructure.Build
             };
 
             var client = new ADotNetClient();
-            client.SerializeAndWriteToFile(adoPipeline: githubPipeline, 
+            client.SerializeAndWriteToFile(adoPipeline: githubPipeline,
                 path: "../../../../.github/workflows/dotnet.yaml");
         }
     }
