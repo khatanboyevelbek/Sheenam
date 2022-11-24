@@ -17,8 +17,6 @@ public class GuestService : IGuestService
         this.storageBroker = storageBroker;
     }
 
-    public ValueTask<Guest> AddGuestAsync(Guest guest)
-    {
-        throw new NotImplementedException();
-    }
+    public async ValueTask<Guest> AddGuestAsync(Guest guest) =>
+        await this.storageBroker.InsertGuestAsync(guest);
 }
