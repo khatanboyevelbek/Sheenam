@@ -22,7 +22,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
                 new GuestValidationException(nullGuestException);
 
             // when
-            async ValueTask<Guest> AddGuestTask() =>
+            ValueTask<Guest> AddGuestTask() =>
                 await this.guestService.AddGuestAsync(nullGuest);
 
             // then
