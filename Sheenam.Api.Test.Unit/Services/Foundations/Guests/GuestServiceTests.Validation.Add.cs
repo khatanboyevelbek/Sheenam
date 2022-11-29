@@ -15,7 +15,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
         public async Task ShouldThrowValidationExceptionOnAddIfGuestIsNullAndLogItAsync()
         {
             // given
-            Guest? nullGuest = null;
+            Guest nullGuest = null;
             var nullGuestException = new NullGuestException();
 
             var guestValidationException = 
