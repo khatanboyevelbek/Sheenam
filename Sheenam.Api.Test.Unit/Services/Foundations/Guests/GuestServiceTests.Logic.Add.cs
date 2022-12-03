@@ -17,26 +17,27 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
         public async Task ShouldAddGuestAsync()
         {
             // given
-            Guest randomGuest = CreateRandomGuest();
-            Guest inputGuest = randomGuest;
-            Guest storageGuest = inputGuest;
-            Guest expectedGuest = storageGuest.DeepClone();
+            Guest? randomGuest = CreateRandomGuest();
+            Guest? inputGuest = randomGuest;
+            Guest? storageGuest = inputGuest;
+            Guest? expectedGuest = storageGuest.DeepClone();
 
-            this.storageBrokerMock.Setup(broker =>
+            this._storageBrokerMock.Setup(broker =>
               broker.InsertGuestAsync(inputGuest))
                 .ReturnsAsync(storageGuest);
 
             // when 
             Guest actualGuest = 
-                await this.guestService.AddGuestAsync(inputGuest);
+                await this._guestService.AddGuestAsync(inputGuest);
 
             // then
             actualGuest.Should().BeEquivalentTo(expectedGuest);
 
-            this.storageBrokerMock.Verify(broker =>
+            this._storageBrokerMock.Verify(broker =>
               broker.InsertGuestAsync(inputGuest), Times.Once());
 
-            this.storageBrokerMock.VerifyNoOtherCalls();
+            this._storageBrokerMock.VerifyNoOtherCalls();
+            this._loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }
