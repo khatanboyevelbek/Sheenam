@@ -11,16 +11,16 @@ namespace Sheenam.Api.Services.Foundations.Guests;
 
 public class GuestService : IGuestService
 {
-    private readonly IStorageBroker _storageBroker;
-    private readonly ILoggingBroker _loggingBroker;
+    private readonly IStorageBroker storageBroker;
+    private readonly ILoggingBroker loggingBroker;
 
     public GuestService(IStorageBroker storageBroker, 
         ILoggingBroker loggingBroker)
     {
-        this._storageBroker = storageBroker;
-        this._loggingBroker = loggingBroker;
+        this.storageBroker = storageBroker;
+        this.loggingBroker = loggingBroker;
     }
 
     public async ValueTask<Guest> AddGuestAsync(Guest? guest) =>
-        await this._storageBroker.InsertGuestAsync(guest);
+        await this.storageBroker.InsertGuestAsync(guest);
 }

@@ -22,22 +22,22 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             Guest? storageGuest = inputGuest;
             Guest? expectedGuest = storageGuest.DeepClone();
 
-            this._storageBrokerMock.Setup(broker =>
+            this.storageBrokerMock.Setup(broker =>
               broker.InsertGuestAsync(inputGuest))
                 .ReturnsAsync(storageGuest);
 
             // when 
             Guest actualGuest = 
-                await this._guestService.AddGuestAsync(inputGuest);
+                await this.guestService.AddGuestAsync(inputGuest);
 
             // then
             actualGuest.Should().BeEquivalentTo(expectedGuest);
 
-            this._storageBrokerMock.Verify(broker =>
+            this.storageBrokerMock.Verify(broker =>
               broker.InsertGuestAsync(inputGuest), Times.Once());
 
-            this._storageBrokerMock.VerifyNoOtherCalls();
-            this._loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

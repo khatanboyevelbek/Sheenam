@@ -3,29 +3,40 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
+using System.Linq.Expressions;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Guests;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
 {
     public partial class GuestServiceTests
     {
-        private readonly Mock<IStorageBroker> _storageBrokerMock;
-        private readonly Mock<ILoggingBroker> _loggingBrokerMock;
-        private readonly IGuestService _guestService;
+        private readonly Mock<IStorageBroker> storageBrokerMock;
+        private readonly Mock<ILoggingBroker> loggingBrokerMock;
+        private readonly IGuestService guestService;
 
         public GuestServiceTests()
         {
-            this._storageBrokerMock = new Mock<IStorageBroker>();
-            this._loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.storageBrokerMock = new Mock<IStorageBroker>();
+            this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
-            this._guestService = 
-                new GuestService(storageBroker: this._storageBrokerMock.Object, 
-                loggingBroker: this._loggingBrokerMock.Object);
+            this.guestService = 
+                new GuestService(storageBroker: this.storageBrokerMock.Object, 
+                loggingBroker: this.loggingBrokerMock.Object);
+        }
+
+        private Expression<Func<Xeption,bool>> SameExceptionAs(Xeption expectedException)
+        {
+            return actualException =>
+                 actualException.Message == expectedException.Message &&
+                 actualException.InnerException.Message == expectedException.InnerException.Message
+                 && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
+
         }
 
         private static Guest? CreateRandomGuest() =>
