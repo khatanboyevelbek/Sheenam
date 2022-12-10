@@ -3,12 +3,14 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-namespace Sheenam.Api.Models.Foundations.Guests
+using Xeptions;
+
+namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
 {
-    public enum GenderType
+    public class NullGuestException : Xeption
     {
-        Male,
-        Female,
-        Other
+        public NullGuestException()
+            : base(message: "Guest is null")
+        {}
     }
 }
