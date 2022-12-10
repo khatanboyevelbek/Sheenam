@@ -39,17 +39,32 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
 
         }
 
-        private static Guest? CreateRandomGuest() =>
+        private static int GetRandomNumber() => 
+            new IntRange(min: 0, max: 9).GetValue();
+
+        private static T GetInvalidEnum<T>()
+        {
+            int randomNumber = GetRandomNumber();
+
+            while(Enum.IsDefined(typeof(T), randomNumber) is true)
+            {
+                randomNumber = GetRandomNumber();
+            }
+
+            return (T)(object)randomNumber;
+        }
+
+        private static Guest CreateRandomGuest() =>
             CreateGuestFiller(date: GetRandomDateTimeOffset).Create();
 
-        private static DateTimeOffset? GetRandomDateTimeOffset =>
+        private static DateTimeOffset GetRandomDateTimeOffset =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
-        private static Filler<Guest> CreateGuestFiller(DateTimeOffset? date)
+        private static Filler<Guest> CreateGuestFiller(DateTimeOffset date)
         {
             var filler = new Filler<Guest>();
             filler.Setup()
-                .OnType<DateTimeOffset?>().Use(date);
+                .OnType<DateTimeOffset>().Use(date);
 
             return filler;
         }

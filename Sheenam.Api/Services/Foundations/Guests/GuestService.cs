@@ -22,10 +22,10 @@ public partial class GuestService : IGuestService
         this.loggingBroker = loggingBroker;
     }
 
-    public ValueTask<Guest> AddGuestAsync(Guest? guest) =>
+    public ValueTask<Guest> AddGuestAsync(Guest guest) =>
         TryCatch(async () =>
         {
-            ValidationGuestNotNull(guest);
+            ValidateGuestOnAdd(guest);
             return await this.storageBroker.InsertGuestAsync(guest);
         });
 }
