@@ -40,7 +40,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
                 Times.Once());
 
             this.loggingBrokerMock.Verify(broker => 
-                broker.LogError(It.Is(SameExceptionAs(expectedGuestDependencyException))),
+                broker.LogCritical(It.Is(SameExceptionAs(expectedGuestDependencyException))),
                 Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();

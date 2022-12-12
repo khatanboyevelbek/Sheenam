@@ -3,6 +3,7 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
+using Microsoft.Data.SqlClient;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Xeptions;
@@ -27,13 +28,24 @@ namespace Sheenam.Api.Services.Foundations.Guests
             {
                 throw CreateAndLogValidationException(invalidGuestException);
             }
+            catch(SqlException sqlException)
+            {
+                var failedGuestStorageException = new FailedGuestStorageException(sqlException);
+                throw CreateAndLogCriticalException(failedGuestStorageException);
+            }
         }
         private GuestValidationException CreateAndLogValidationException(Xeption exception)
         {
             var guestValidationException = new GuestValidationException(exception);
             this.loggingBroker.LogError(guestValidationException);
             return guestValidationException;
+        }
 
+        private GuestDependencyException CreateAndLogCriticalException(Xeption exception)
+        {
+            var guestDependencyException = new GuestDependencyException(exception);
+            this.loggingBroker.LogCritical(guestDependencyException);
+            return guestDependencyException;
         }
     }
 }
