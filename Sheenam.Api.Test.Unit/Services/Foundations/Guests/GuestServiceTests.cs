@@ -5,6 +5,7 @@
 
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
@@ -58,6 +59,9 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
 
         private static SqlException GetSqlError() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue().ToString();
 
         private static Guest CreateRandomGuest() =>
             CreateGuestFiller(date: GetRandomDateTimeOffset).Create();
