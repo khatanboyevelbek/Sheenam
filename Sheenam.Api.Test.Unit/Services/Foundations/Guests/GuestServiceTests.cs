@@ -33,14 +33,8 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
-        private Expression<Func<Xeption,bool>> SameExceptionAs(Xeption expectedException)
-        {
-            return actualException =>
-                 actualException.Message == expectedException.Message &&
-                 actualException.InnerException.Message == expectedException.InnerException.Message
-                 && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
-
-        }
+        private Expression<Func<Xeption,bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static int GetRandomNumber() => 
             new IntRange(min: 0, max: 9).GetValue();
