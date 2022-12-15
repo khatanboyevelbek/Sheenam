@@ -21,7 +21,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             SqlException sqlException = GetSqlError();
             FailedGuestStorageException failedGuestStorageException = new(sqlException);
 
-            GuestDependencyException expectedGuestDependencyException = 
+            GuestDependencyException expectedGuestDependencyException =
                 new(failedGuestStorageException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -29,17 +29,17 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
                 .ThrowsAsync(sqlException);
 
             // when
-            ValueTask<Guest> AddGuestTask = 
+            ValueTask<Guest> AddGuestTask =
                 this.guestService.AddGuestAsync(someGuest);
 
             // then
             await Assert.ThrowsAsync<GuestDependencyException>(() => AddGuestTask.AsTask());
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.InsertGuestAsync(someGuest), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertGuestAsync(someGuest),
                 Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(expectedGuestDependencyException))),
                 Times.Once());
 
