@@ -5,7 +5,6 @@
 
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
@@ -28,22 +27,22 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             this.storageBrokerMock = new Mock<IStorageBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
-            this.guestService = 
-                new GuestService(storageBroker: this.storageBrokerMock.Object, 
+            this.guestService =
+                new GuestService(storageBroker: this.storageBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
-        private Expression<Func<Xeption,bool>> SameExceptionAs(Xeption expectedException) =>
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
-        private static int GetRandomNumber() => 
+        private static int GetRandomNumber() =>
             new IntRange(min: 0, max: 9).GetValue();
 
         private static T GetInvalidEnum<T>()
         {
             int randomNumber = GetRandomNumber();
 
-            while(Enum.IsDefined(typeof(T), randomNumber) is true)
+            while (Enum.IsDefined(typeof(T), randomNumber) is true)
             {
                 randomNumber = GetRandomNumber();
             }

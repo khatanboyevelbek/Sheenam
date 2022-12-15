@@ -3,7 +3,6 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.Runtime.InteropServices;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Sheenam.Api.Models.Foundations.Guests;
@@ -26,23 +25,23 @@ namespace Sheenam.Api.Services.Foundations.Guests
             {
                 throw CreateAndLogValidationException(nullGuestException);
             }
-            catch(InvalidGuestException invalidGuestException)
+            catch (InvalidGuestException invalidGuestException)
             {
                 throw CreateAndLogValidationException(invalidGuestException);
             }
-            catch(SqlException sqlException)
+            catch (SqlException sqlException)
             {
                 var failedGuestStorageException = new FailedGuestStorageException(sqlException);
                 throw CreateAndLogCriticalException(failedGuestStorageException);
             }
-            catch(DuplicateKeyException duplicateKeyException)
+            catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistGuestException =
                     new AlreadyExistGuestException(duplicateKeyException);
 
                 throw CreateAndLogDuplicateKeyException(alreadyExistGuestException);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 var failedGuestServiceException = new FailedGuestServiceException(exception);
                 throw CreateAndLogGuestDependencyServiceException(failedGuestServiceException);

@@ -3,7 +3,6 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using FluentAssertions;
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
@@ -20,18 +19,18 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             Guest nullGuest = null;
             NullGuestException nullGuestException = new();
 
-            GuestValidationException expectedGuestValidationException = 
+            GuestValidationException expectedGuestValidationException =
                 new(nullGuestException);
 
             // when
-            ValueTask<Guest> addGuestTask = 
+            ValueTask<Guest> addGuestTask =
                 this.guestService.AddGuestAsync(nullGuest);
 
             // then
-            await Assert.ThrowsAsync<GuestValidationException>(() => 
+            await Assert.ThrowsAsync<GuestValidationException>(() =>
               addGuestTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(expectedGuestValidationException))),
                 Times.Once());
 
@@ -56,7 +55,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
 
             InvalidGuestException invalidGuestException = new();
 
-            invalidGuestException.AddData(key: nameof(Guest.Id), 
+            invalidGuestException.AddData(key: nameof(Guest.Id),
                 values: "Id is required");
 
             invalidGuestException.AddData(key: nameof(Guest.FirstName),
@@ -74,7 +73,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             invalidGuestException.AddData(key: nameof(Guest.Address),
                 values: "Text is invalid");
 
-            var expectedGuestValidationExpected = 
+            var expectedGuestValidationExpected =
                 new GuestValidationException(invalidGuestException);
 
             // when
@@ -89,7 +88,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
               Times.Once());
 
             this.storageBrokerMock.Verify(broker =>
-              broker.InsertGuestAsync(It.IsAny<Guest>()), 
+              broker.InsertGuestAsync(It.IsAny<Guest>()),
               Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -106,18 +105,18 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             invalidGuest.Gender = GetInvalidEnum<GenderType>();
             var invalidGuestException = new InvalidGuestException();
 
-            invalidGuestException.AddData(key: nameof(Guest.Gender), 
+            invalidGuestException.AddData(key: nameof(Guest.Gender),
                 values: "Value is invalid");
 
-            var expectedGuestValidationException = 
+            var expectedGuestValidationException =
                 new GuestValidationException(invalidGuestException);
 
             // when
-            ValueTask<Guest> AddGuestTask = 
+            ValueTask<Guest> AddGuestTask =
                 this.guestService.AddGuestAsync(invalidGuest);
 
             // then
-            await Assert.ThrowsAsync<GuestValidationException>(() => 
+            await Assert.ThrowsAsync<GuestValidationException>(() =>
                AddGuestTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>

@@ -27,7 +27,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
                 .ReturnsAsync(storageGuest);
 
             // when 
-            Guest actualGuest = 
+            Guest actualGuest =
                 await this.guestService.AddGuestAsync(inputGuest);
 
             // then

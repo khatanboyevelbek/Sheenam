@@ -10,8 +10,8 @@ namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
     public class FailedGuestServiceException : Xeption
     {
         public FailedGuestServiceException(Exception innerException)
-            : base(message: "Unexpected error of guest service occured", 
+            : base(message: "Unexpected error of guest service occured",
                   innerException)
-        {}
+        { }
     }
 }

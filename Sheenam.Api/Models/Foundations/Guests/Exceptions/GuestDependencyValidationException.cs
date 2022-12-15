@@ -9,9 +9,9 @@ namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
 {
     public class GuestDependencyValidationException : Xeption
     {
-        public GuestDependencyValidationException(Xeption innerException) 
+        public GuestDependencyValidationException(Xeption innerException)
             : base(message: "Guest dependency error occured. Fix errors and try again",
                   innerException)
-        {}
+        { }
     }
 }
