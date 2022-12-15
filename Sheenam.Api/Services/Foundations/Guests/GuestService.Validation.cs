@@ -3,8 +3,6 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.Data;
-using System.Diagnostics;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 
@@ -16,13 +14,14 @@ public partial class GuestService
     {
         ValidationGuestNotNull(guest);
 
-        Validate((Rule: IsInvalid(guest.Id), Parameter: nameof(guest.Id)),
-            (Rule: IsInvalid(guest.FirstName), Parameter: nameof(guest.FirstName)),
-            (Rule: IsInvalid(guest.LastName), Parameter: nameof(guest.LastName)),
-            (Rule: IsInvalid(guest.DateOfBirth), Parameter: nameof(guest.DateOfBirth)),
-            (Rule: IsInvalid(guest.Email), Parameter: nameof(guest.Email)),
-            (Rule: IsInvalid(guest.Address), Parameter: nameof(guest.Address)),
-            (Rule: IsInvalid(guest.Gender), Parameter: nameof(guest.Gender)));
+        Validate(
+          (Rule: IsInvalid(guest.Id), Parameter: nameof(guest.Id)),
+          (Rule: IsInvalid(guest.FirstName), Parameter: nameof(guest.FirstName)),
+          (Rule: IsInvalid(guest.LastName), Parameter: nameof(guest.LastName)),
+          (Rule: IsInvalid(guest.DateOfBirth), Parameter: nameof(guest.DateOfBirth)),
+          (Rule: IsInvalid(guest.Email), Parameter: nameof(guest.Email)),
+          (Rule: IsInvalid(guest.Address), Parameter: nameof(guest.Address)),
+          (Rule: IsInvalid(guest.Gender), Parameter: nameof(guest.Gender)));
     }
     private void ValidationGuestNotNull(Guest guest)
     {
@@ -59,9 +58,9 @@ public partial class GuestService
     {
         var invalidGuestException = new InvalidGuestException();
 
-        foreach ((dynamic rule, string parameter) in validations ) 
-        { 
-            if(rule.Condition)
+        foreach ((dynamic rule, string parameter) in validations)
+        {
+            if (rule.Condition)
             {
                 invalidGuestException.UpsertDataList(parameter, rule.Message);
             }

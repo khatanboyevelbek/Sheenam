@@ -12,6 +12,6 @@ namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
         public GuestDependencyServiceException(Xeption innerExpection)
             : base(message: "Unexpected service error occured. Contact support",
                   innerExpection)
-        {}
+        { }
     }
 }

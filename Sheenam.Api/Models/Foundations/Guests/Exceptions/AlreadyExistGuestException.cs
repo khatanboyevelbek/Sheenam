@@ -12,6 +12,6 @@ namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
         public AlreadyExistGuestException(Exception innerException)
             : base(message: "Guest is already exist. Please try again",
                   innerException)
-        {}
+        { }
     }
 }

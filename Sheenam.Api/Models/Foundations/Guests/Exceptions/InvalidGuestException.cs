@@ -11,6 +11,6 @@ namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
     {
         public InvalidGuestException()
             : base(message: "Guest is invalid")
-        {}
+        { }
     }
 }
