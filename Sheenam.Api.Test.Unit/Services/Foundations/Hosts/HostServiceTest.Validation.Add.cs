@@ -41,5 +41,48 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task ShouldThrowExceptionOnAddIfHostIsInvalidAndLogItAsync(string invalidData)
+        {
+            // given
+            Host invalidHost = new Host()
+            {
+                LastName = invalidData
+            };
+
+            var invalidHostException = new InvalidHostException();
+            invalidHostException.AddData(key: nameof(invalidHost.Id), values: "Id is required");
+            invalidHostException.AddData(key: nameof(invalidHost.FirstName), values: "Text is required");
+            invalidHostException.AddData(key: nameof(invalidHost.LastName), values: "Text is required");
+            invalidHostException.AddData(key: nameof(invalidHost.DateOfBirth), values: "Date is required");
+            invalidHostException.AddData(key: nameof(invalidHost.Email), values: "Text is required");
+            invalidHostException.AddData(key: nameof(invalidHost.PhoneNumber), values: "Text is required");
+
+            HostValidationException hostValidationException =
+                new HostValidationException(invalidHostException);
+
+            // when
+            ValueTask<Host> AddHostTask = 
+                this.hostservice.AddHostAsync(invalidHost);
+
+            // then
+            await Assert.ThrowsAsync<HostValidationException>(() => 
+                AddHostTask.AsTask());
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(hostValidationException))),
+                    Times.Once());
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.InsertHostAsync(It.IsAny<Host>()), 
+                    Times.Never());
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
