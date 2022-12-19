@@ -6,12 +6,13 @@
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
-using Sheenam.Api.Services.Foundations.Guests;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 using Tynamix.ObjectFiller;
 using Sheenam.Api.Services.Foundations.Hosts;
 using System.Linq.Expressions;
 using Xeptions;
+using Microsoft.Data.SqlClient;
+using System.Runtime.Serialization;
 
 namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
 {
@@ -29,6 +30,12 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             this.hostservice = new HostService(storageBroker: storageBrokerMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
         }
+
+        private static string GetRandomString() => 
+            new MnemonicString().GetValue().ToString();
+
+        private static SqlException GetSqlError() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
         private static int CreateRandomNumber() => 
             new IntRange(min: 0, max: 9).GetValue();

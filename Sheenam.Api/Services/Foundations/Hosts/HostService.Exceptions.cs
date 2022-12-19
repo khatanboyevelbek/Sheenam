@@ -4,6 +4,7 @@
 // ---------------------------------------------------
 
 using System;
+using EFxceptions.Models.Exceptions;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Xeptions;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
@@ -27,6 +28,13 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             {
                throw CreateExceptionIfHostIsInvalid(invalidHostException);
             }
+            catch(DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistHostException = 
+                    new AlreadyExistHostException(duplicateKeyException);
+
+                throw CreateExceptionIfDuplicateKeyErrorOccured(alreadyExistHostException);
+            }
         }
 
         private HostValidationException CreateExceptionIfHostIsNull(Xeption innerException)
@@ -45,6 +53,15 @@ namespace Sheenam.Api.Services.Foundations.Hosts
 
             this.loggingBroker.LogError(hostValidationException);
             return hostValidationException;
+        }
+
+        private HostDependencyValidationException CreateExceptionIfDuplicateKeyErrorOccured(Xeption innerException)
+        {
+            var hostDependencyValidationException = 
+                new HostDependencyValidationException(innerException);
+
+            this.loggingBroker.LogError(hostDependencyValidationException);
+            return hostDependencyValidationException;
         }
     }
 }
