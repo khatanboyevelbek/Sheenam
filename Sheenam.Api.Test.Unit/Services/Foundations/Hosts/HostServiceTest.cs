@@ -30,6 +30,21 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
                 loggingBroker: loggingBrokerMock.Object);
         }
 
+        private static int CreateRandomNumber() => 
+            new IntRange(min: 0, max: 9).GetValue();
+
+        private static T GetInvalidEnum<T>()
+        {
+            int randomNumber = CreateRandomNumber();
+
+            while(Enum.IsDefined(typeof(T), randomNumber) is true)
+            {
+                randomNumber = CreateRandomNumber();
+            }
+
+            return (T)(Object)randomNumber;
+        }
+
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
