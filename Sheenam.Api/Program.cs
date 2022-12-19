@@ -16,7 +16,7 @@ namespace Sheenam.Api
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<StorageBroker>();
-            AddTransients(builder);
+            AddBrokers(builder);
             AddFoundationServices(builder);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -37,7 +37,7 @@ namespace Sheenam.Api
             app.Run();
         }
 
-        private static void AddTransients(WebApplicationBuilder builder)
+        private static void AddBrokers(WebApplicationBuilder builder)
         {
             builder.Services.AddTransient<IStorageBroker, StorageBroker>();
             builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
