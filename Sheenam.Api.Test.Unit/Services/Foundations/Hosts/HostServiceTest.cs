@@ -10,6 +10,8 @@ using Sheenam.Api.Services.Foundations.Guests;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 using Tynamix.ObjectFiller;
 using Sheenam.Api.Services.Foundations.Hosts;
+using System.Linq.Expressions;
+using Xeptions;
 
 namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
 {
@@ -27,6 +29,9 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             this.hostservice = new HostService(storageBroker: storageBrokerMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static Host CreateRandomHost() =>
             CreateHostFiller(date: CreateRandomDateTimeOffset()).Create();
