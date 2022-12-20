@@ -3,7 +3,6 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.Data;
 using Sheenam.Api.Models.Foundations.Hosts;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
@@ -57,9 +56,9 @@ namespace Sheenam.Api.Services.Foundations.Hosts
         {
             var invalidHostException = new InvalidHostException();
 
-            foreach ((dynamic rule, string parameter) in validations) 
+            foreach ((dynamic rule, string parameter) in validations)
             {
-                if(rule.Condition)
+                if (rule.Condition)
                 {
                     invalidHostException.UpsertDataList(key: parameter, value: rule.Message);
                 }

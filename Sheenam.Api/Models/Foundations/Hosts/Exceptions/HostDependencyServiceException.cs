@@ -9,8 +9,8 @@ namespace Sheenam.Api.Models.Foundations.Hosts.Exceptions
 {
     public class HostDependencyServiceException : Xeption
     {
-        public HostDependencyServiceException(Xeption innerException) 
-            : base(message: "Unexpected host service error occured. Contact support", 
+        public HostDependencyServiceException(Xeption innerException)
+            : base(message: "Unexpected host service error occured. Contact support",
                   innerException)
         { }
     }

@@ -10,7 +10,7 @@ namespace Sheenam.Api.Models.Foundations.Hosts.Exceptions
     public class HostDependencyValidationException : Xeption
     {
         public HostDependencyValidationException(Xeption innerException)
-            : base(message: "Host dependency error occured, fix the errors and try again", 
+            : base(message: "Host dependency error occured, fix the errors and try again",
                   innerException)
         { }
     }

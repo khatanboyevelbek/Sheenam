@@ -4,7 +4,6 @@
 // ---------------------------------------------------
 
 using Moq;
-using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.Hosts;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Xunit;
@@ -19,9 +18,9 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
         {
             // given
             Host nullHost = null;
-            var nullHostException= new NullHostException();
+            var nullHostException = new NullHostException();
 
-            HostValidationException hostValidationException = 
+            HostValidationException hostValidationException =
                 new HostValidationException(nullHostException);
 
             // when 
@@ -29,15 +28,15 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
                 this.hostservice.AddHostAsync(nullHost);
 
             // then
-            await Assert.ThrowsAsync<HostValidationException>(() => 
+            await Assert.ThrowsAsync<HostValidationException>(() =>
                 AddHostTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(hostValidationException))),
                 Times.Once());
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.InsertHostAsync(It.IsAny<Host>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertHostAsync(It.IsAny<Host>()),
                 Times.Never());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -68,19 +67,19 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
                 new HostValidationException(invalidHostException);
 
             // when
-            ValueTask<Host> AddHostTask = 
+            ValueTask<Host> AddHostTask =
                 this.hostservice.AddHostAsync(invalidHost);
 
             // then
-            await Assert.ThrowsAsync<HostValidationException>(() => 
+            await Assert.ThrowsAsync<HostValidationException>(() =>
                 AddHostTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(hostValidationException))),
                     Times.Once());
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.InsertHostAsync(It.IsAny<Host>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertHostAsync(It.IsAny<Host>()),
                     Times.Never());
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

@@ -3,16 +3,16 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
+using System.Linq.Expressions;
+using System.Runtime.Serialization;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
-using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
-using Tynamix.ObjectFiller;
 using Sheenam.Api.Services.Foundations.Hosts;
-using System.Linq.Expressions;
+using Tynamix.ObjectFiller;
 using Xeptions;
-using Microsoft.Data.SqlClient;
-using System.Runtime.Serialization;
+using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
 namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
 {
@@ -31,20 +31,20 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
                 loggingBroker: loggingBrokerMock.Object);
         }
 
-        private static string GetRandomString() => 
+        private static string GetRandomString() =>
             new MnemonicString().GetValue().ToString();
 
         private static SqlException GetSqlError() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
 
-        private static int CreateRandomNumber() => 
+        private static int CreateRandomNumber() =>
             new IntRange(min: 0, max: 9).GetValue();
 
         private static T GetInvalidEnum<T>()
         {
             int randomNumber = CreateRandomNumber();
 
-            while(Enum.IsDefined(typeof(T), randomNumber) is true)
+            while (Enum.IsDefined(typeof(T), randomNumber) is true)
             {
                 randomNumber = CreateRandomNumber();
             }

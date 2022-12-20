@@ -32,8 +32,8 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             // then
             actualTask.Should().BeEquivalentTo(expectedHost);
 
-            this.storageBrokerMock.Verify(broker => 
-               broker.InsertHostAsync(inputHost), 
+            this.storageBrokerMock.Verify(broker =>
+               broker.InsertHostAsync(inputHost),
                Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();

@@ -5,7 +5,6 @@
 
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
-using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
 namespace Sheenam.Api.Services.Foundations.Hosts
@@ -15,7 +14,7 @@ namespace Sheenam.Api.Services.Foundations.Hosts
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
 
-        public HostService(IStorageBroker storageBroker, 
+        public HostService(IStorageBroker storageBroker,
             ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
@@ -31,6 +30,6 @@ namespace Sheenam.Api.Services.Foundations.Hosts
                 return await this.storageBroker.InsertHostAsync(host);
             });
         }
-           
+
     }
 }

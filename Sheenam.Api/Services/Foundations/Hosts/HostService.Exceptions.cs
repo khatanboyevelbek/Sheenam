@@ -3,7 +3,6 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
@@ -25,27 +24,27 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             {
                 throw CreateExceptionIfHostIsNull(nullHostException);
             }
-            catch(InvalidHostException invalidHostException)
+            catch (InvalidHostException invalidHostException)
             {
-               throw CreateExceptionIfHostIsInvalid(invalidHostException);
+                throw CreateExceptionIfHostIsInvalid(invalidHostException);
             }
-            catch(DuplicateKeyException duplicateKeyException)
+            catch (DuplicateKeyException duplicateKeyException)
             {
-                var alreadyExistHostException = 
+                var alreadyExistHostException =
                     new AlreadyExistHostException(duplicateKeyException);
 
                 throw CreateExceptionIfDuplicateKeyErrorOccured(alreadyExistHostException);
             }
-            catch(SqlException sqlException)
+            catch (SqlException sqlException)
             {
-                var failedHostStorageException = 
+                var failedHostStorageException =
                     new FailedHostStorageException(sqlException);
 
                 throw CreateExceptionIfSqlErrorOccured(failedHostStorageException);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
-                var failedHostServiceException = 
+                var failedHostServiceException =
                     new FailedHostServiceException(exception);
 
                 throw CreateExceptionIfServiceErrorOccured(failedHostServiceException);
@@ -72,7 +71,7 @@ namespace Sheenam.Api.Services.Foundations.Hosts
 
         private HostDependencyValidationException CreateExceptionIfDuplicateKeyErrorOccured(Xeption innerException)
         {
-            var hostDependencyValidationException = 
+            var hostDependencyValidationException =
                 new HostDependencyValidationException(innerException);
 
             this.loggingBroker.LogError(hostDependencyValidationException);
@@ -81,7 +80,7 @@ namespace Sheenam.Api.Services.Foundations.Hosts
 
         private HostDependencyException CreateExceptionIfSqlErrorOccured(Xeption innerException)
         {
-            var hostDependencyException = 
+            var hostDependencyException =
                 new HostDependencyException(innerException);
 
             this.loggingBroker.LogCritical(hostDependencyException);

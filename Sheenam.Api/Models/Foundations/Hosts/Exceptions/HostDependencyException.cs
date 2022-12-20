@@ -10,7 +10,7 @@ namespace Sheenam.Api.Models.Foundations.Hosts.Exceptions
     public class HostDependencyException : Xeption
     {
         public HostDependencyException(Xeption innerException)
-            : base(message: "Host dependency error occured. Contact support", 
+            : base(message: "Host dependency error occured. Contact support",
                   innerException)
         { }
     }
