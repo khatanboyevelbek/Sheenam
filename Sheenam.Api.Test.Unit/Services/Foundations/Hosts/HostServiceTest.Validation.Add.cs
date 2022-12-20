@@ -4,6 +4,7 @@
 // ---------------------------------------------------
 
 using Moq;
+using Sheenam.Api.Models.Foundations;
 using Sheenam.Api.Models.Foundations.Hosts;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Xunit;
