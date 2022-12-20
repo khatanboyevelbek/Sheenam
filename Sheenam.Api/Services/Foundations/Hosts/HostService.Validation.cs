@@ -3,7 +3,7 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using Sheenam.Api.Models.Foundations.Hosts;
+using Sheenam.Api.Models.Foundations;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 

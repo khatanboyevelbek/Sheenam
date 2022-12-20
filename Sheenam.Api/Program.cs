@@ -28,7 +28,8 @@ namespace Sheenam.Api
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c => 
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sheenam"));
             }
 
             app.UseHttpsRedirection();
