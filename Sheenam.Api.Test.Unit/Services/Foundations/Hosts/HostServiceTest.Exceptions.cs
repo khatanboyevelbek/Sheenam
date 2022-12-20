@@ -47,5 +47,41 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+        [Fact]
+        public async Task ShouldThrowExceptionOnAddIfSqlErrorOccuredAndLogItAsync()
+        {
+            // given
+            Host someHost = CreateRandomHost();
+            SqlException sqlException = GetSqlError();
+
+            var failedHostStorageException = 
+                new FailedHostStorageException(sqlException);
+
+            var hostDependencyException = 
+                new HostDependencyException(failedHostStorageException);
+
+            this.storageBrokerMock.Setup(broker =>
+                broker.InsertHostAsync(someHost))
+                .ThrowsAsync(sqlException);
+
+            // when
+            ValueTask<Host> AddHostTask = this.hostservice.AddHostAsync(someHost);
+
+            // then
+            await Assert.ThrowsAsync<HostDependencyException>(() => 
+                AddHostTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.InsertHostAsync(It.IsAny<Host>()), 
+                    Times.Once());
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogCritical(It.Is(SameExceptionAs(hostDependencyException))), 
+                    Times.Once());
+
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+
+        }
     }
 }
