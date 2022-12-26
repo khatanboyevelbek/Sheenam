@@ -47,7 +47,7 @@ namespace Sheenam.Api.Infrastructure.Build
                                 Name = "Setting Up .NET",
                                 TargetDotNetVersion = new TargetDotNetVersion
                                 {
-                                    DotNetVersion = "6.0.400"
+                                    DotNetVersion = "7.0.100"
                                 }
                             },
                             new RestoreTask
