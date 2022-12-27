@@ -3,6 +3,7 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
+using System.Text;
 using System.Security.Cryptography;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
@@ -28,10 +29,10 @@ public partial class GuestService : IGuestService
 
         using(var hmacsha = new HMACSHA512())
         {
-            passwordHash = hmacsha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            passwordHash = hmacsha.ComputeHash(Encoding.UTF8.GetBytes(password));
         };
 
-        return passwordHash.ToString();
+        return Encoding.UTF8.GetString(passwordHash);
     }
 
     public ValueTask<Guest> AddGuestAsync(Guest guest) =>
