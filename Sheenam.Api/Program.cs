@@ -23,6 +23,9 @@ namespace Sheenam.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddRouting(options => 
+                options.LowercaseUrls = true);
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
