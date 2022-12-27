@@ -68,7 +68,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             invalidGuestException.AddData(key: nameof(Guest.DateOfBirth),
               values: "Date is invalid");
 
-            invalidGuestException.AddData(key: nameof(Guest.DateOfBirth),
+            invalidGuestException.AddData(key: nameof(Guest.Password),
               values: "Text is invalid");
 
             invalidGuestException.AddData(key: nameof(Guest.Email),
