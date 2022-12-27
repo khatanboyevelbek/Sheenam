@@ -22,7 +22,7 @@ namespace Sheenam.Api.Controllers
             this.guestService = guestService;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async ValueTask<ActionResult<Guest>> PostGuestAsync(Guest guest)
         {
             try
@@ -53,5 +53,12 @@ namespace Sheenam.Api.Controllers
                 return InternalServerError(guestDependencyServiceException.InnerException);
             }
         }
+
+        [HttpPost("login")]
+        public async ValueTask<ActionResult> PostLoginGuestAsync(Guest guest)
+        {
+            return Ok(guest);
+        }
+        
     }
 }
