@@ -22,18 +22,24 @@ public partial class GuestService : IGuestService
         this.loggingBroker = loggingBroker;
     }
 
-    private void CreatePasswordHash(string password, out byte[] passwordHash)
+    private string CreatePasswordHash(string password)
     {
+        byte[] passwordHash;
+
         using(var hmacsha = new HMACSHA512())
         {
             passwordHash = hmacsha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
         };
+
+        return passwordHash.ToString();
     }
 
     public ValueTask<Guest> AddGuestAsync(Guest guest) =>
         TryCatch(async () =>
         {
             ValidateGuestOnAdd(guest);
+
+            guest.Password = CreatePasswordHash(guest.Password);
 
             return await this.storageBroker.InsertGuestAsync(guest);
         });
