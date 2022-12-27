@@ -21,6 +21,7 @@ public partial class GuestService
           (Rule: IsInvalid(guest.LastName), Parameter: nameof(guest.LastName)),
           (Rule: IsInvalid(guest.DateOfBirth), Parameter: nameof(guest.DateOfBirth)),
           (Rule: IsInvalid(guest.Email), Parameter: nameof(guest.Email)),
+          (Rule: IsInvalid(guest.Password), Parameter: nameof(guest.Password)),
           (Rule: IsInvalid(guest.Address), Parameter: nameof(guest.Address)),
           (Rule: IsInvalid(guest.Gender), Parameter: nameof(guest.Gender)));
     }
