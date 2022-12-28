@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
+using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
@@ -69,6 +70,10 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue().ToString();
+
+        private static IQueryable<Guest> CreateRandomGuests() =>
+            CreateGuestFiller(date: GetRandomDateTimeOffset)
+            .Create(count: GetRandomNumber()).AsQueryable<Guest>();
 
         private static Guest CreateRandomGuest() =>
             CreateGuestFiller(date: GetRandomDateTimeOffset).Create();
