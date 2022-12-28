@@ -3,6 +3,10 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
+using System.Configuration;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Services.Foundations.Guests;
@@ -19,6 +23,7 @@ namespace Sheenam.Api
             builder.Services.AddDbContext<StorageBroker>();
             AddBrokers(builder);
             AddFoundationServices(builder);
+            AddConfigurationServices(builder);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -36,10 +41,33 @@ namespace Sheenam.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
 
             app.Run();
+        }
+
+        private static void AddConfigurationServices(WebApplicationBuilder builder) 
+        {
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(jwt =>
+                    {
+                        var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
+
+                        jwt.TokenValidationParameters = new TokenValidationParameters()
+                        {
+                            ValidateIssuerSigningKey = true,
+
+                            IssuerSigningKey =
+                                new SymmetricSecurityKey(key),
+
+                            ValidateIssuer = false,
+                            ValidateAudience = false,
+                            RequireExpirationTime = true,
+                            ValidateLifetime = true
+                        };
+                    });
         }
 
         private static void AddBrokers(WebApplicationBuilder builder)
