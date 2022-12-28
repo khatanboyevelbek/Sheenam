@@ -29,10 +29,10 @@ public partial class GuestService : IGuestService
 
         using(var hmacsha = new HMACSHA512())
         {
-            passwordHash = hmacsha.ComputeHash(Encoding.UTF8.GetBytes(password));
+            passwordHash = hmacsha.ComputeHash(Encoding.ASCII.GetBytes(password));
         };
 
-        return Encoding.UTF8.GetString(passwordHash);
+        return Encoding.ASCII.GetString(passwordHash);
     }
 
     public ValueTask<Guest> AddGuestAsync(Guest guest) =>
