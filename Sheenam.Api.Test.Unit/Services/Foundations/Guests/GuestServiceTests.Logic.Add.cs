@@ -21,6 +21,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             Guest inputGuest = randomGuest;
             Guest storageGuest = inputGuest;
             Guest expectedGuest = storageGuest.DeepClone();
+            expectedGuest.Password = CreatePasswordHash(expectedGuest.Password);
 
             this.storageBrokerMock.Setup(broker =>
               broker.InsertGuestAsync(inputGuest))

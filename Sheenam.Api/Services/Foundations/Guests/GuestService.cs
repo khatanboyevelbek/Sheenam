@@ -27,12 +27,12 @@ public partial class GuestService : IGuestService
     {
         byte[] passwordHash;
 
-        using(var hmacsha = new HMACSHA512())
+        using(var hmacsha = SHA256.Create())
         {
-            passwordHash = hmacsha.ComputeHash(Encoding.ASCII.GetBytes(password));
+            passwordHash = hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
         };
 
-        return Encoding.ASCII.GetString(passwordHash);
+        return Convert.ToBase64String(passwordHash);
     }
 
     public ValueTask<Guest> AddGuestAsync(Guest guest) =>
@@ -45,8 +45,6 @@ public partial class GuestService : IGuestService
             return await this.storageBroker.InsertGuestAsync(guest);
         });
 
-    public IQueryable<Guest> RetrieveAllGuests()
-    {
-        return this.storageBroker.SelectAllGuests();
-    }
+    public IQueryable<Guest> RetrieveAllGuests() =>
+        TryCatch(() => this.storageBroker.SelectAllGuests());
 }

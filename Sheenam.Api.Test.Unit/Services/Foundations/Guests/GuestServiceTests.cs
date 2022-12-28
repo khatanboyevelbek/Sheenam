@@ -5,6 +5,8 @@
 
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
@@ -48,6 +50,18 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             }
 
             return (T)(object)randomNumber;
+        }
+
+        private string CreatePasswordHash(string password)
+        {
+            byte[] passwordHash;
+
+            using (var hmacsha = SHA256.Create())
+            {
+                passwordHash = hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
+            };
+
+            return Convert.ToBase64String(passwordHash);
         }
 
         private static SqlException GetSqlError() =>

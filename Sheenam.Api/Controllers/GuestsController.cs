@@ -58,7 +58,7 @@ namespace Sheenam.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public ActionResult<string> PostLoginGuestAsync(LoginModel loginModel)
+        public ActionResult<string> LoginGuestAsync(LoginModel loginModel)
         {
             var checkingGuestIsValid = this.guestService.RetrieveAllGuests()
                 .Where(guest => guest.Email == loginModel.Email);
