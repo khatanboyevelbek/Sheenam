@@ -3,8 +3,10 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
+using Sheenam.Api.Models.Foundations;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Services.Foundations.Guests;
@@ -54,10 +56,11 @@ namespace Sheenam.Api.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
-        public async ValueTask<ActionResult> PostLoginGuestAsync(Guest guest)
+        public async ValueTask<ActionResult<string>> PostLoginGuestAsync(LoginModel loginModel)
         {
-            return Ok(guest);
+            return Ok(loginModel);
         }
         
     }
