@@ -51,7 +51,17 @@ namespace Sheenam.Api.Services.Foundations.Guests
 
         private IQueryable<Guest> TryCatch(ReturningGuestsFunction returningGuestsFunction)
         {
-            return returningGuestsFunction();
+            try
+            {
+                return returningGuestsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedGuestStorageException = 
+                    new FailedGuestStorageException(sqlException);
+
+                throw CreateAndLogCriticalException(failedGuestStorageException);
+            }
         }
 
         private GuestValidationException CreateAndLogValidationException(Xeption exception)
