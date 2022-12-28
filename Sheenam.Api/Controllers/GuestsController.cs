@@ -58,9 +58,16 @@ namespace Sheenam.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async ValueTask<ActionResult<string>> PostLoginGuestAsync(LoginModel loginModel)
+        public ActionResult<string> PostLoginGuestAsync(LoginModel loginModel)
         {
-            return Ok(loginModel);
+            var checkingGuestIsValid = this.guestService.RetrieveAllGuests()
+                .Where(guest => guest.Email == loginModel.Email);
+
+            if (checkingGuestIsValid is null)
+            {
+                return BadRequest("Email is not valid");
+            }
+            return Ok("You are successfuly logged in");
         }
         
     }

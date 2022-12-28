@@ -44,4 +44,9 @@ public partial class GuestService : IGuestService
 
             return await this.storageBroker.InsertGuestAsync(guest);
         });
+
+    public IQueryable<Guest> RetrieveAllGuests()
+    {
+        return this.storageBroker.SelectAllGuests();
+    }
 }
