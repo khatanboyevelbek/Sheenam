@@ -62,8 +62,8 @@ namespace Sheenam.Api
                             IssuerSigningKey =
                                 new SymmetricSecurityKey(key),
 
-                            ValidateIssuer = false,
-                            ValidateAudience = false,
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
                             RequireExpirationTime = true,
                             ValidateLifetime = true
                         };
