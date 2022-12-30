@@ -103,7 +103,7 @@ namespace Sheenam.Api.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public ActionResult<string> LoginGuestAsync(LoginModel loginModel)
+        public ActionResult<string> LoginGuest(LoginModel loginModel)
         {
             try
             {
