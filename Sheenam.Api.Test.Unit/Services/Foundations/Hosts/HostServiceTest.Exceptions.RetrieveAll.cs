@@ -3,11 +3,10 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
-using Xunit;
 using Microsoft.Data.SqlClient;
-using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Moq;
+using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
+using Xunit;
 
 namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
 {
@@ -19,7 +18,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             // given
             SqlException sqlException = GetSqlError();
 
-            var failedHostStorageException = 
+            var failedHostStorageException =
                 new FailedHostStorageException(sqlException);
 
             var hostDependencyException =
@@ -29,7 +28,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
                 broker.SelectAllHosts()).Throws(sqlException);
 
             // when & then
-            Assert.Throws<HostDependencyException>(() => 
+            Assert.Throws<HostDependencyException>(() =>
                 this.hostservice.RetrieveAllHosts());
 
             this.storageBrokerMock.Verify(broker =>
@@ -52,20 +51,20 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             var failedHostServiceException =
                 new FailedHostServiceException(exception);
 
-            var hostDependencyServiceException = 
+            var hostDependencyServiceException =
                 new HostDependencyServiceException(failedHostServiceException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllHosts()).Throws(exception);
 
             // when & then
-            Assert.Throws<HostDependencyServiceException>(() => 
+            Assert.Throws<HostDependencyServiceException>(() =>
                 this.hostservice.RetrieveAllHosts());
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllHosts(), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(hostDependencyServiceException))),
                     Times.Once());
 

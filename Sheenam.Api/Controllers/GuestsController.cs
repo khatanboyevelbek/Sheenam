@@ -8,7 +8,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -108,12 +107,12 @@ namespace Sheenam.Api.Controllers
         {
             try
             {
-                Guest? currentGuest = 
+                Guest? currentGuest =
                     this.guestService.RetrieveAllGuests().FirstOrDefault(
-                        guest => guest.Email.Trim().ToLower() == loginModel.Email.Trim().ToLower() 
+                        guest => guest.Email.Trim().ToLower() == loginModel.Email.Trim().ToLower()
                         && guest.Password == CreatePasswordHash(loginModel.Password));
 
-                if(currentGuest is not null)
+                if (currentGuest is not null)
                 {
                     string generatedJwtToken = GenerateJwtToken(currentGuest);
 
@@ -137,11 +136,11 @@ namespace Sheenam.Api.Controllers
             {
                 return InternalServerError(guestDependencyException.InnerException);
             }
-            catch(GuestDependencyServiceException guestDependencyServiceException)
+            catch (GuestDependencyServiceException guestDependencyServiceException)
             {
                 return InternalServerError(guestDependencyServiceException.InnerException);
             }
         }
-        
+
     }
 }

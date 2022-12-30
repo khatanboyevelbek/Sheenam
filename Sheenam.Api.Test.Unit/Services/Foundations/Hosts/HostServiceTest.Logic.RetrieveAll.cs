@@ -3,11 +3,11 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
-using Xunit;
-using Force.DeepCloner;
 using FluentAssertions;
+using Force.DeepCloner;
 using Moq;
+using Xunit;
+using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
 namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
 {
@@ -21,16 +21,16 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             IQueryable<Host> storageHosts = randomHosts;
             IQueryable<Host> expectedHosts = storageHosts.DeepClone();
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllHosts()).Returns(storageHosts);
 
             // when
-            IQueryable<Host> actualHosts = 
+            IQueryable<Host> actualHosts =
                 this.hostservice.RetrieveAllHosts();
 
             actualHosts.Should().BeEquivalentTo(expectedHosts);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllHosts(), Times.Once());
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

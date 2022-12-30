@@ -20,18 +20,18 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             IQueryable<Guest> randomGuests = CreateRandomGuests();
             IQueryable<Guest> storageGuests = CreateRandomGuests();
             IQueryable<Guest> expectedGuests = storageGuests.DeepClone();
-            
-            this.storageBrokerMock.Setup(broker => 
+
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllGuests()).Returns(storageGuests);
 
             // when
-            IQueryable<Guest> ActualGuests = 
+            IQueryable<Guest> ActualGuests =
                 this.guestService.RetrieveAllGuests();
 
             // then 
             ActualGuests.Should().BeEquivalentTo(expectedGuests);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllGuests(), Times.Once());
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

@@ -67,7 +67,7 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             }
             catch (Exception exception)
             {
-                var failedHostServiceException 
+                var failedHostServiceException
                     = new FailedHostServiceException(exception);
 
                 throw CreateExceptionIfServiceErrorOccured(failedHostServiceException);
