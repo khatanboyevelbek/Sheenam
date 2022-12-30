@@ -45,5 +45,10 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             });
         }
 
+        public IQueryable<Host> RetrieveAllHosts()
+        {
+            return this.storageBroker.SelectAllHosts();
+        }
+
     }
 }

@@ -10,5 +10,7 @@ namespace Sheenam.Api.Services.Foundations.Hosts
     public interface IHostService
     {
         ValueTask<Host> AddHostAsync(Host host);
+
+        IQueryable<Host> RetrieveAllHosts();
     }
 }
