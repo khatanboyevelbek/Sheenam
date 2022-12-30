@@ -65,6 +65,13 @@ namespace Sheenam.Api.Services.Foundations.Hosts
 
                 throw CreateExceptionIfSqlErrorOccured(failedHostStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedHostServiceException 
+                    = new FailedHostServiceException(exception);
+
+                throw CreateExceptionIfServiceErrorOccured(failedHostServiceException);
+            }
         }
 
         private HostValidationException CreateExceptionIfHostIsNull(Xeption innerException)
