@@ -22,7 +22,7 @@ namespace Sheenam.Api.Controllers
             this.hostService = hostService;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async ValueTask<ActionResult<Host>> PostHostAsync(Host host)
         {
             try
