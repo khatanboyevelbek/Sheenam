@@ -3,7 +3,7 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-namespace Sheenam.Api.Models.Foundations
+namespace Sheenam.Api.Models.Foundations.LoginModel
 {
     public class LoginModel
     {

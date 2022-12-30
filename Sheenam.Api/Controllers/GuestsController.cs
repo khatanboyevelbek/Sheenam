@@ -7,13 +7,15 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using RESTFulSense.Controllers;
-using Sheenam.Api.Models.Foundations;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
+using Sheenam.Api.Models.Foundations.LoginModel;
 using Sheenam.Api.Services.Foundations.Guests;
 
 namespace Sheenam.Api.Controllers
@@ -41,6 +43,31 @@ namespace Sheenam.Api.Controllers
             };
 
             return Convert.ToBase64String(passwordHash);
+        }
+
+        private string GenerateJwtToken(Guest currentGuest)
+        {
+            var securityKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+
+            var cridentials =
+                new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                        new Claim(ClaimTypes.NameIdentifier, currentGuest.Id.ToString()),
+                        new Claim(ClaimTypes.Email, currentGuest.Email),
+                    };
+
+            var token = new JwtSecurityToken(
+                configuration["Jwt:Issuer"],
+                configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddHours(6),
+                signingCredentials: cridentials
+                );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         [HttpPost("register")]
@@ -88,36 +115,23 @@ namespace Sheenam.Api.Controllers
 
                 if(currentGuest is not null)
                 {
-                    var securityKey = 
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+                    string generatedJwtToken = GenerateJwtToken(currentGuest);
 
-                    var cridentials = 
-                        new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-                    var claims = new[]
+                    var tokenObject = new
                     {
-                        new Claim(ClaimTypes.NameIdentifier, currentGuest.Id.ToString()),
-                        new Claim(ClaimTypes.Email, currentGuest.Email),
+                        Token = generatedJwtToken
                     };
 
-                    var token = new JwtSecurityToken(
-                        configuration["Jwt:Issuer"],
-                        configuration["Jwt:Audience"],
-                        claims,
-                        expires: DateTime.Now.AddHours(6),
-                        signingCredentials: cridentials
-                        );
-
-                    string generatedToken = new JwtSecurityTokenHandler().WriteToken(token);
-
-                    return Ok(generatedToken);
+                    return Ok(JsonSerializer.Serialize(tokenObject));
                 }
                 else
                 {
-                    return NotFound("Guest is not found");
+                    throw new FailedGuestLoginException();
                 }
-
-                
+            }
+            catch (FailedGuestLoginException failedUserLoginException)
+            {
+                return Unauthorized(failedUserLoginException);
             }
             catch (GuestDependencyException guestDependencyException)
             {
