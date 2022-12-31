@@ -12,6 +12,7 @@ using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 namespace Sheenam.Api.Services.Foundations.Hosts
 {
     public delegate ValueTask<Host> ReturningHostFunction();
+    public delegate IQueryable<Host> ReturningHostsFunction();
     public partial class HostService
     {
         public async ValueTask<Host> TryCatch(ReturningHostFunction handler)
@@ -46,6 +47,28 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             {
                 var failedHostServiceException =
                     new FailedHostServiceException(exception);
+
+                throw CreateExceptionIfServiceErrorOccured(failedHostServiceException);
+            }
+        }
+
+        public IQueryable<Host> TryCatch(ReturningHostsFunction returningHostsFunction)
+        {
+            try
+            {
+                return returningHostsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedHostStorageException =
+                    new FailedHostStorageException(sqlException);
+
+                throw CreateExceptionIfSqlErrorOccured(failedHostStorageException);
+            }
+            catch (Exception exception)
+            {
+                var failedHostServiceException
+                    = new FailedHostServiceException(exception);
 
                 throw CreateExceptionIfServiceErrorOccured(failedHostServiceException);
             }

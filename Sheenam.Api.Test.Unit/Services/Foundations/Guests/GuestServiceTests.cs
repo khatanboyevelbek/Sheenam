@@ -7,7 +7,6 @@ using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
-using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;

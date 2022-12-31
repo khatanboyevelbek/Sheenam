@@ -12,7 +12,7 @@ using Sheenam.Api.Brokers.Storages;
 namespace Sheenam.Api.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20221227082856_InitialTables")]
+    [Migration("20221230141640_InitialTables")]
     partial class InitialTables
     {
         /// <inheritdoc />
@@ -90,6 +90,10 @@ namespace Sheenam.Api.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

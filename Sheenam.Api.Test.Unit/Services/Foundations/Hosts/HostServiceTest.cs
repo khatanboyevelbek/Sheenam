@@ -55,6 +55,10 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
 
+        private static IQueryable<Host> CreateRandomHosts() =>
+            CreateHostFiller(date: CreateRandomDateTimeOffset())
+            .Create(count: CreateRandomNumber()).AsQueryable();
+
         private static Host CreateRandomHost() =>
             CreateHostFiller(date: CreateRandomDateTimeOffset()).Create();
 

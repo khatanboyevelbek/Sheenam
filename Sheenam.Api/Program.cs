@@ -3,7 +3,6 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.Configuration;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -28,7 +27,7 @@ namespace Sheenam.Api
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddRouting(options => 
+            builder.Services.AddRouting(options =>
                 options.LowercaseUrls = true);
 
             var app = builder.Build();
@@ -36,7 +35,7 @@ namespace Sheenam.Api
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI(c => 
+                app.UseSwaggerUI(c =>
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sheenam"));
             }
 
@@ -48,7 +47,7 @@ namespace Sheenam.Api
             app.Run();
         }
 
-        private static void AddConfigurationServices(WebApplicationBuilder builder) 
+        private static void AddConfigurationServices(WebApplicationBuilder builder)
         {
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(jwt =>

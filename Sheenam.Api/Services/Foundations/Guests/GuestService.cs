@@ -3,8 +3,8 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.Text;
 using System.Security.Cryptography;
+using System.Text;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Guests;
@@ -27,7 +27,7 @@ public partial class GuestService : IGuestService
     {
         byte[] passwordHash;
 
-        using(var hmacsha = SHA256.Create())
+        using (var hmacsha = SHA256.Create())
         {
             passwordHash = hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
         };

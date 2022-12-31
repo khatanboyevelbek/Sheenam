@@ -5,7 +5,6 @@
 
 using Microsoft.Data.SqlClient;
 using Moq;
-using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Xunit;
 
@@ -34,11 +33,11 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             // then
             Assert.Throws<GuestDependencyException>(retrieveAllGuestsAction);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllGuests(), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
-                broker.LogCritical(It.Is(SameExceptionAs(guestDependencyException))), 
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(guestDependencyException))),
                     Times.Once());
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -51,24 +50,24 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             // given
             var exception = new Exception();
 
-            var failedGuestServiceException = 
+            var failedGuestServiceException =
                 new FailedGuestServiceException(exception);
 
-            GuestDependencyServiceException guestDependencyServiceException = 
+            GuestDependencyServiceException guestDependencyServiceException =
                 new GuestDependencyServiceException(failedGuestServiceException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllGuests()).Throws(exception);
 
             // when & then
-            Assert.Throws<GuestDependencyServiceException>(() => 
+            Assert.Throws<GuestDependencyServiceException>(() =>
                 this.guestService.RetrieveAllGuests());
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllGuests(), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
-                broker.LogCritical(It.Is(SameExceptionAs(guestDependencyServiceException))), 
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(guestDependencyServiceException))),
                     Times.Once());
 
             this.loggingBrokerMock.VerifyNoOtherCalls();

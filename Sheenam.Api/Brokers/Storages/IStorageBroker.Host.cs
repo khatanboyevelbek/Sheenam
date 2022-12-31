@@ -10,5 +10,6 @@ namespace Sheenam.Api.Brokers.Storages
     public partial interface IStorageBroker
     {
         ValueTask<Host> InsertHostAsync(Host host);
+        IQueryable<Host> SelectAllHosts();
     }
 }
