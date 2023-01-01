@@ -48,8 +48,9 @@ public partial class GuestService : IGuestService
     public IQueryable<Guest> RetrieveAllGuests() =>
         TryCatch(() => this.storageBroker.SelectAllGuests());
 
-    public async ValueTask<Guest> RetrieveGuestById(Guid id)
+    public ValueTask<Guest> RetrieveGuestByIdAsync(Guid id)
     {
-        return await this.storageBroker.SelectGuestByIdAsync(id);
+        return TryCatch(async () => 
+            await this.storageBroker.SelectGuestByIdAsync(id));
     }
 }

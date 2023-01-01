@@ -28,7 +28,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             
             // when
             Guest actualGuest = 
-                await this.guestService.RetrieveGuestById(randomId);
+                await this.guestService.RetrieveGuestByIdAsync(randomId);
 
             // then 
             actualGuest.Should().BeEquivalentTo(expectedGuest);
