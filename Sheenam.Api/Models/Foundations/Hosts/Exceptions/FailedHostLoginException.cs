@@ -10,7 +10,7 @@ namespace Sheenam.Api.Models.Foundations.Hosts.Exceptions
     public class FailedHostLoginException : Xeption
     {
         public FailedHostLoginException()
-            : base(message: "Host is not found. Try again")
+            : base(message: "Incorrect email or password. Try again")
         { }
     }
 }
