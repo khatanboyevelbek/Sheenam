@@ -129,7 +129,7 @@ namespace Sheenam.Api.Controllers
             }
             catch (FailedHostLoginException failedHostLoginException)
             {
-                return Unauthorized(failedHostLoginException);
+                return BadRequest(failedHostLoginException);
             }
             catch(HostDependencyException hostDependencyException)
             {

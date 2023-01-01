@@ -1,0 +1,16 @@
+﻿// ---------------------------------------------------
+// Copyright (c) Coalition of Good-hearted Engineers
+// Free to use to find comfort and pease
+// ---------------------------------------------------
+
+using Xeptions;
+
+namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
+{
+    public class ForbiddenGuestException : Xeption
+    {
+        public ForbiddenGuestException()
+            : base(message: "You don't have permission to access this recourse")
+        { }
+    }
+}
