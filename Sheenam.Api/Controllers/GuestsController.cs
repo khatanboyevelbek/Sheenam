@@ -26,7 +26,8 @@ namespace Sheenam.Api.Controllers
         private readonly IGuestService guestService;
         private readonly IConfiguration configuration;
 
-        public GuestsController(IGuestService guestService, IConfiguration configuration)
+        public GuestsController(IGuestService guestService,
+            IConfiguration configuration)
         {
             this.guestService = guestService;
             this.configuration = configuration;
@@ -38,7 +39,8 @@ namespace Sheenam.Api.Controllers
 
             using (var hmacsha = SHA256.Create())
             {
-                passwordHash = hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
+                passwordHash =
+                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
             };
 
             return Convert.ToBase64String(passwordHash);
@@ -54,9 +56,9 @@ namespace Sheenam.Api.Controllers
 
             var claims = new[]
             {
-                        new Claim(ClaimTypes.NameIdentifier, currentGuest.Id.ToString()),
-                        new Claim(ClaimTypes.Email, currentGuest.Email),
-                    };
+                new Claim(ClaimTypes.NameIdentifier, currentGuest.Id.ToString()),
+                new Claim(ClaimTypes.Email, currentGuest.Email),
+            };
 
             var token = new JwtSecurityToken(
                 configuration["Jwt:Issuer"],

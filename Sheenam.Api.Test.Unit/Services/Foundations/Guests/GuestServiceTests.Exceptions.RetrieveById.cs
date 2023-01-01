@@ -21,30 +21,30 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             Guid randomId = Guid.NewGuid();
             SqlException sqlException = GetSqlError();
 
-            var failedGuestStorageException = 
+            var failedGuestStorageException =
                 new FailedGuestStorageException(sqlException);
 
             var guestDependencyException =
                 new GuestDependencyException(failedGuestStorageException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectGuestByIdAsync(It.IsAny<Guid>())).ThrowsAsync(sqlException);
 
             // when
-            ValueTask<Guest> RetrieveGuestByIdTask = 
+            ValueTask<Guest> RetrieveGuestByIdTask =
                 this.guestService.RetrieveGuestByIdAsync(randomId);
 
             // then
-            var actualGuestDependencyException = 
+            var actualGuestDependencyException =
                 await Assert.ThrowsAsync<GuestDependencyException>(RetrieveGuestByIdTask.AsTask);
 
             actualGuestDependencyException.Should().BeEquivalentTo(guestDependencyException);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectGuestByIdAsync(It.IsAny<Guid>()), Times.Once());
 
-            this.loggingBrokerMock.Verify(broker => 
-                broker.LogCritical(It.Is(SameExceptionAs(guestDependencyException))), 
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogCritical(It.Is(SameExceptionAs(guestDependencyException))),
                 Times.Once());
 
             this.storageBrokerMock.VerifyNoOtherCalls();

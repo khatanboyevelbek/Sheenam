@@ -61,7 +61,6 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             invalidHostException.AddData(key: nameof(invalidHost.LastName), values: "Text is required");
             invalidHostException.AddData(key: nameof(invalidHost.DateOfBirth), values: "Date is required");
             invalidHostException.AddData(key: nameof(invalidHost.Email), values: "Text is required");
-            invalidHostException.AddData(key: nameof(invalidHost.Password), values: "Text is required");
             invalidHostException.AddData(key: nameof(invalidHost.PhoneNumber), values: "Text is required");
 
             HostValidationException hostValidationException =

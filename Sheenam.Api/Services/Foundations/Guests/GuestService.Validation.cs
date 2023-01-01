@@ -3,8 +3,6 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.Data;
-using System.Reflection.Metadata;
 using Sheenam.Api.Models.Foundations;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;

@@ -21,24 +21,24 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
             var invalidGuestException = new InvalidGuestException();
             invalidGuestException.AddData(key: nameof(Guest.Id), values: "Id is required");
 
-            var guestValidationException = 
+            var guestValidationException =
                 new GuestValidationException(invalidGuestException);
 
             // when
-            ValueTask<Guest> RetrieveGuestByIdTask = 
+            ValueTask<Guest> RetrieveGuestByIdTask =
                 this.guestService.RetrieveGuestByIdAsync(invalidGuestId);
 
-            var actualGuestValidationException = 
+            var actualGuestValidationException =
                 await Assert.ThrowsAsync<GuestValidationException>(RetrieveGuestByIdTask.AsTask);
 
             // then 
             actualGuestValidationException.Should().BeEquivalentTo(guestValidationException);
 
-            this.loggingBrokerMock.Verify(broker => 
-                broker.LogError(It.Is(SameExceptionAs(guestValidationException))), 
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(guestValidationException))),
                 Times.Once());
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectGuestByIdAsync(It.IsAny<Guid>()), Times.Never());
 
             this.storageBrokerMock.VerifyNoOtherCalls();
