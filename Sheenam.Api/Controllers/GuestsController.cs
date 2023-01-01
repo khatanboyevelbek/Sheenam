@@ -26,7 +26,8 @@ namespace Sheenam.Api.Controllers
         private readonly IGuestService guestService;
         private readonly IConfiguration configuration;
 
-        public GuestsController(IGuestService guestService, IConfiguration configuration)
+        public GuestsController(IGuestService guestService,
+            IConfiguration configuration)
         {
             this.guestService = guestService;
             this.configuration = configuration;
@@ -38,7 +39,8 @@ namespace Sheenam.Api.Controllers
 
             using (var hmacsha = SHA256.Create())
             {
-                passwordHash = hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
+                passwordHash =
+                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
             };
 
             return Convert.ToBase64String(passwordHash);
@@ -54,9 +56,8 @@ namespace Sheenam.Api.Controllers
 
             var claims = new[]
             {
-                        new Claim(ClaimTypes.NameIdentifier, currentGuest.Id.ToString()),
-                        new Claim(ClaimTypes.Email, currentGuest.Email),
-                    };
+                new Claim(ClaimTypes.NameIdentifier, currentGuest.Id.ToString())
+            };
 
             var token = new JwtSecurityToken(
                 configuration["Jwt:Issuer"],
@@ -67,6 +68,25 @@ namespace Sheenam.Api.Controllers
                 );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private string GetCurrentGuest()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+
+                string? Id = userClaims.FirstOrDefault(x => x.Type == 
+                    ClaimTypes.NameIdentifier)?.Value;
+
+                return Id;
+            }
+            else
+            {
+                throw new UnauthorizedGuestException();
+            }
         }
 
         [HttpPost("register")]
@@ -109,8 +129,8 @@ namespace Sheenam.Api.Controllers
             {
                 Guest? currentGuest =
                     this.guestService.RetrieveAllGuests().FirstOrDefault(
-                        guest => guest.Email.Trim().ToLower() == loginModel.Email.Trim().ToLower()
-                        && guest.Password == CreatePasswordHash(loginModel.Password));
+                    guest => guest.Email.Trim().ToLower() == loginModel.Email.Trim().ToLower()
+                    && guest.Password == CreatePasswordHash(loginModel.Password));
 
                 if (currentGuest is not null)
                 {
@@ -121,7 +141,7 @@ namespace Sheenam.Api.Controllers
                         Token = generatedJwtToken
                     };
 
-                    return Ok(JsonSerializer.Serialize(tokenObject));
+                    return Ok(tokenObject);
                 }
                 else
                 {
@@ -130,7 +150,7 @@ namespace Sheenam.Api.Controllers
             }
             catch (FailedGuestLoginException failedUserLoginException)
             {
-                return Unauthorized(failedUserLoginException);
+                return BadRequest(failedUserLoginException);
             }
             catch (GuestDependencyException guestDependencyException)
             {
@@ -142,5 +162,46 @@ namespace Sheenam.Api.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        [Authorize]
+        public async ValueTask<ActionResult<Guest>> GetGuestByIdAsync([FromRoute] Guid id)
+        {
+            try
+            {
+                var authorizedGuestId = GetCurrentGuest();
+
+                if (authorizedGuestId == id.ToString())
+                {
+                    Guest currentGuest =
+                        await this.guestService.RetrieveGuestByIdAsync(id);
+
+                    return Ok(currentGuest);
+                }
+                else
+                {
+                    throw new ForbiddenGuestException();
+                }
+            }
+            catch (UnauthorizedGuestException unauthorizedGuestException)
+            {
+                return Unauthorized(unauthorizedGuestException);
+            }
+            catch (ForbiddenGuestException forbiddenGuestException)
+            {
+                return Forbidden(forbiddenGuestException);
+            }
+            catch (GuestValidationException guestValidationException)
+            {
+                return BadRequest(guestValidationException.InnerException);
+            }
+            catch (GuestDependencyException guestDependencyException)
+            {
+                return InternalServerError(guestDependencyException.InnerException);
+            }
+            catch (GuestDependencyServiceException guestDependencyServiceException)
+            {
+                return InternalServerError(guestDependencyServiceException.InnerException);
+            }
+        }
     }
 }

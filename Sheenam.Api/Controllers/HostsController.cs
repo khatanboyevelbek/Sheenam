@@ -55,9 +55,9 @@ namespace Sheenam.Api.Controllers
 
             var claims = new[]
             {
-                        new Claim(ClaimTypes.NameIdentifier, currentHost.Id.ToString()),
-                        new Claim(ClaimTypes.Email, currentHost.Email),
-                    };
+                new Claim(ClaimTypes.NameIdentifier, currentHost.Id.ToString()),
+                new Claim(ClaimTypes.Email, currentHost.Email),
+            };
 
             var token = new JwtSecurityToken(
                 configuration["Jwt:Issuer"],
@@ -129,7 +129,7 @@ namespace Sheenam.Api.Controllers
             }
             catch (FailedHostLoginException failedHostLoginException)
             {
-                return Unauthorized(failedHostLoginException);
+                return BadRequest(failedHostLoginException);
             }
             catch(HostDependencyException hostDependencyException)
             {

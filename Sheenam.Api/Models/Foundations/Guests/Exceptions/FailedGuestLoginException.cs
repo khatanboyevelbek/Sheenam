@@ -10,7 +10,7 @@ namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
     public class FailedGuestLoginException : Xeption
     {
         public FailedGuestLoginException()
-            : base(message: "Guest is not found. Try again")
+            : base(message: "Incorrect email or password. Try again")
         { }
     }
 }

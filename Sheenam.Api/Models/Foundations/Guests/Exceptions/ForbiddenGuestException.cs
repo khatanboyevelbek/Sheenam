@@ -5,12 +5,12 @@
 
 using Xeptions;
 
-namespace Sheenam.Api.Models.Foundations.Hosts.Exceptions
+namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
 {
-    public class FailedHostLoginException : Xeption
+    public class ForbiddenGuestException : Xeption
     {
-        public FailedHostLoginException()
-            : base(message: "Incorrect email or password. Try again")
+        public ForbiddenGuestException()
+            : base(message: "You don't have permission to access this recourse")
         { }
     }
 }

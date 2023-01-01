@@ -5,12 +5,12 @@
 
 using Xeptions;
 
-namespace Sheenam.Api.Models.Foundations.Hosts.Exceptions
+namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
 {
-    public class FailedHostLoginException : Xeption
+    public class UnauthorizedGuestException : Xeption
     {
-        public FailedHostLoginException()
-            : base(message: "Incorrect email or password. Try again")
+        public UnauthorizedGuestException() 
+            :base(message: "Guest request has not been completed. Try again")
         { }
     }
 }

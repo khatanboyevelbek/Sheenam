@@ -11,6 +11,10 @@ namespace Sheenam.Api.Services.Foundations.Guests;
 
 public partial class GuestService
 {
+    private void ValidateGuestId(Guid id)
+    {
+        Validate((Rule: IsInvalid(id), Parameter: nameof(Guest.Id)));
+    }
     private void ValidateGuestOnAdd(Guest guest)
     {
         ValidationGuestNotNull(guest);
