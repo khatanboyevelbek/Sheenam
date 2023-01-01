@@ -141,7 +141,7 @@ namespace Sheenam.Api.Controllers
                         Token = generatedJwtToken
                     };
 
-                    return Ok(JsonSerializer.Serialize(tokenObject));
+                    return Ok(tokenObject);
                 }
                 else
                 {
