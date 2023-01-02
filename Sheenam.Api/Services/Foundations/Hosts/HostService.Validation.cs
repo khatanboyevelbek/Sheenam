@@ -3,6 +3,8 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
+using System.Data;
+using System.Reflection.Metadata;
 using Sheenam.Api.Models.Foundations;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
@@ -11,6 +13,10 @@ namespace Sheenam.Api.Services.Foundations.Hosts
 {
     public partial class HostService
     {
+        public void ValidateHostId(Guid id)
+        {
+            Validate((Rule: isInvalid(id), Parameter: nameof(Host.Id)));
+        }
         public void ValidationHostOnAdd(Host host)
         {
             ValidationHostNotNull(host);
