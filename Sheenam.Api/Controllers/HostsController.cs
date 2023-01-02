@@ -201,5 +201,56 @@ namespace Sheenam.Api.Controllers
                 return InternalServerError(hostDependencyServiceException.InnerException);
             }
         }
+
+        [HttpPut("update")]
+        [Authorize]
+        public async ValueTask<ActionResult<Host>> PutHostAsync([FromBody] Host host)
+        {
+            try
+            {
+                var authorizedGuestId = GetCurrentHost();
+
+                if (authorizedGuestId == host.Id.ToString())
+                {
+                    Host updatedHost =
+                        await this.hostService.ModifyHostAsync(host);
+
+                    return Ok(updatedHost);
+                }
+                else
+                {
+                    throw new ForbiddenHostException();
+                }
+            }
+            catch (UnauthorizedHostException unauthorizedHostException)
+            {
+                return Unauthorized(unauthorizedHostException);
+            }
+            catch (ForbiddenHostException forbiddenHostException)
+            {
+                return Forbidden(forbiddenHostException);
+            }
+            catch (HostValidationException hostValidationException)
+            {
+                return BadRequest(hostValidationException.InnerException);
+            }
+            catch (HostDependencyValidationException hostDependencyValidationException)
+                when (hostDependencyValidationException.InnerException is AlreadyExistHostException)
+            {
+                return Conflict(hostDependencyValidationException.InnerException);
+            }
+            catch (HostDependencyValidationException hostDependencyValidationException)
+            {
+                return BadRequest(hostDependencyValidationException.InnerException);
+            }
+            catch (HostDependencyException hostDependencyException)
+            {
+                return InternalServerError(hostDependencyException.InnerException);
+            }
+            catch (HostDependencyServiceException hostDependencyServiceException)
+            {
+                return InternalServerError(hostDependencyServiceException.InnerException);
+            }
+        }
     }
 }
