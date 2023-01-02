@@ -54,5 +54,15 @@ namespace Sheenam.Api.Services.Foundations.Hosts
                 ValidateHostId(id);
                 return await this.storageBroker.SelectHostByIdAsync(id);
             });
+
+        public ValueTask<Host> ModifyHostAsync(Host host)
+        {
+            return TryCatch(async () =>
+            {
+                ValidationHostOnModify(host);
+                host.Password = CreatePasswordHash(host.Password);
+                return await this.storageBroker.UpdateHostAsync(host);
+            });
+        }
     }
 }
