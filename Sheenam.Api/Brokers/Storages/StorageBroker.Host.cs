@@ -33,5 +33,13 @@ namespace Sheenam.Api.Brokers.Storages
             var currentHost = await broker.Hosts.FindAsync(id);
             return currentHost;
         }
+
+        public async ValueTask<Host> UpdateHostAsync(Host host)
+        {
+            var broker = new StorageBroker(this.configuration);
+            broker.Entry(host).State = EntityState.Modified;
+            await broker.SaveChangesAsync();
+            return host;
+        }
     }
 }
