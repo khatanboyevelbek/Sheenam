@@ -26,5 +26,12 @@ namespace Sheenam.Api.Brokers.Storages
             var broker = new StorageBroker(this.configuration);
             return broker.Set<Host>();
         }
+
+        public async ValueTask<Host> SelectHostByIdAsync(Guid id)
+        {
+            var broker = new StorageBroker(this.configuration);
+            var currentHost = await broker.Hosts.FindAsync(id);
+            return currentHost;
+        }
     }
 }
