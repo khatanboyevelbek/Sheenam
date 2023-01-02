@@ -8,10 +8,12 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using RESTFulSense.Controllers;
 using Sheenam.Api.Models.Foundations.Guests;
+using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Sheenam.Api.Models.Foundations.LoginModel;
 using Sheenam.Api.Services.Foundations.Hosts;
@@ -70,6 +72,25 @@ namespace Sheenam.Api.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        private string GetCurrentHost()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+
+                string? Id = userClaims.FirstOrDefault(x => x.Type ==
+                    ClaimTypes.NameIdentifier)?.Value;
+
+                return Id;
+            }
+            else
+            {
+                throw new UnauthorizedHostException();
+            }
+        }
+
         [HttpPost("register")]
         public async ValueTask<ActionResult<Host>> PostHostAsync(Host host)
         {
@@ -100,7 +121,7 @@ namespace Sheenam.Api.Controllers
                 return InternalServerError(hostDependencyServiceException.InnerException);
             }
         }
-
+        [AllowAnonymous]
         [HttpPost("Login")]
         public ActionResult<string> LoginHost(LoginModel loginModel)
         {
@@ -136,6 +157,46 @@ namespace Sheenam.Api.Controllers
                 return InternalServerError(hostDependencyException.InnerException);
             }
             catch(HostDependencyServiceException hostDependencyServiceException)
+            {
+                return InternalServerError(hostDependencyServiceException.InnerException);
+            }
+        }
+
+        [HttpGet("{id}")]
+        [Authorize]
+        public async ValueTask<ActionResult<Host>> GetHostByIdAsync([FromRoute] Guid id)
+        {
+            try
+            {
+                var authorizedHostId = GetCurrentHost();
+
+                if (authorizedHostId == id.ToString())
+                {
+                    Host currentHost = await this.hostService.RetrieveHostByIdAsync(id);
+                    return Ok(currentHost);
+                }
+                else
+                {
+                    throw new ForbiddenHostException();
+                }
+            }
+            catch (UnauthorizedHostException unauthorizedHostException)
+            {
+                return Unauthorized(unauthorizedHostException);
+            }
+            catch (ForbiddenHostException forbiddenHostException)
+            {
+                return Forbidden(forbiddenHostException);
+            }
+            catch (HostValidationException hostValidationException)
+            {
+                return BadRequest(hostValidationException.InnerException);
+            }
+            catch (HostDependencyException hostDependencyException)
+            {
+                return InternalServerError(hostDependencyException.InnerException);
+            }
+            catch (HostDependencyServiceException hostDependencyServiceException)
             {
                 return InternalServerError(hostDependencyServiceException.InnerException);
             }
