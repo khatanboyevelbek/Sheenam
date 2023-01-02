@@ -31,6 +31,20 @@ namespace Sheenam.Api.Services.Foundations.Hosts
                 (Rule: isInvalid(host.Gender), Parameter: nameof(host.Gender)));
         }
 
+        public void ValidationHostOnModify(Host host)
+        {
+            ValidationHostNotNull(host);
+
+            Validate((Rule: isInvalid(host.Id), Parameter: nameof(host.Id)),
+                (Rule: isInvalid(host.FirstName), Parameter: nameof(host.FirstName)),
+                (Rule: isInvalid(host.LastName), Parameter: nameof(host.LastName)),
+                (Rule: isInvalid(host.DateOfBirth), Parameter: nameof(host.DateOfBirth)),
+                (Rule: isInvalid(host.Email), Parameter: nameof(host.Email)),
+                (Rule: isInvalid(host.Password), Parameter: nameof(host.Password)),
+                (Rule: isInvalid(host.PhoneNumber), Parameter: nameof(host.PhoneNumber)),
+                (Rule: isInvalid(host.Gender), Parameter: nameof(host.Gender)));
+        }
+
         private static void ValidationHostNotNull(Host host)
         {
             if (host is null)
