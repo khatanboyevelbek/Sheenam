@@ -29,6 +29,21 @@ public partial class GuestService
           (Rule: IsInvalid(guest.Address), Parameter: nameof(guest.Address)),
           (Rule: IsInvalid(guest.Gender), Parameter: nameof(guest.Gender)));
     }
+
+    private void ValidateGuestOnModify(Guest guest)
+    {
+        ValidationGuestNotNull(guest);
+
+        Validate(
+          (Rule: IsInvalid(guest.Id), Parameter: nameof(guest.Id)),
+          (Rule: IsInvalid(guest.FirstName), Parameter: nameof(guest.FirstName)),
+          (Rule: IsInvalid(guest.LastName), Parameter: nameof(guest.LastName)),
+          (Rule: IsInvalid(guest.DateOfBirth), Parameter: nameof(guest.DateOfBirth)),
+          (Rule: IsInvalid(guest.Email), Parameter: nameof(guest.Email)),
+          (Rule: IsInvalid(guest.Password), Parameter: nameof(guest.Password)),
+          (Rule: IsInvalid(guest.Address), Parameter: nameof(guest.Address)),
+          (Rule: IsInvalid(guest.Gender), Parameter: nameof(guest.Gender)));
+    }
     private void ValidationGuestNotNull(Guest guest)
     {
         if (guest is null)

@@ -203,5 +203,57 @@ namespace Sheenam.Api.Controllers
                 return InternalServerError(guestDependencyServiceException.InnerException);
             }
         }
+
+        [HttpPut("update")]
+        [Authorize]
+        public async ValueTask<ActionResult<Guest>> PutGuestAsync([FromBody] Guest guest)
+        {
+            try
+            {
+                var authorizedGuestId = GetCurrentGuest();
+                
+                if(authorizedGuestId == guest.Id.ToString())
+                {
+                    Guest updatedGuest =
+                        await this.guestService.ModifyGuestAsync(guest);
+
+                    return Ok(updatedGuest);
+                }
+                else
+                {
+                    throw new ForbiddenGuestException();
+                }
+            }
+            catch (UnauthorizedGuestException unauthorizedGuestException)
+            {
+                return Unauthorized(unauthorizedGuestException);
+            }
+            catch (ForbiddenGuestException forbiddenGuestException)
+            {
+                return Forbidden(forbiddenGuestException);
+            }
+            catch (GuestValidationException guestValidationException)
+            {
+                return BadRequest(guestValidationException.InnerException);
+            }
+            catch (GuestDependencyValidationException guestDependencyValidationException)
+                when (guestDependencyValidationException.InnerException is AlreadyExistGuestException)
+
+            {
+                return Conflict(guestDependencyValidationException.InnerException);
+            }
+            catch (GuestDependencyValidationException guestDependencyValidationException)
+            {
+                return BadRequest(guestDependencyValidationException.InnerException);
+            }
+            catch (GuestDependencyException guestDependencyException)
+            {
+                return InternalServerError(guestDependencyException.InnerException);
+            }
+            catch (GuestDependencyServiceException guestDependencyServiceException)
+            {
+                return InternalServerError(guestDependencyServiceException.InnerException);
+            }
+        }
     }
 }

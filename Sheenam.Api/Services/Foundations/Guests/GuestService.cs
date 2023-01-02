@@ -54,4 +54,14 @@ public partial class GuestService : IGuestService
             ValidateGuestId(id);
             return await this.storageBroker.SelectGuestByIdAsync(id);
         });
+
+    public ValueTask<Guest> ModifyGuestAsync(Guest guest)
+    {
+        return TryCatch(async () =>
+        {
+            ValidateGuestOnModify(guest);
+            guest.Password = CreatePasswordHash(guest.Password);
+            return await this.storageBroker.UpdateGuestAsync(guest);
+        });
+    }
 }
