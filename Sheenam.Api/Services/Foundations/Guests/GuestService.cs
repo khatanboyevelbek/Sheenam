@@ -64,4 +64,12 @@ public partial class GuestService : IGuestService
             return await this.storageBroker.UpdateGuestAsync(guest);
         });
     }
+
+    public async ValueTask<Guest> RemoveGuestAsync(Guid id)
+    {
+        Guest gettingGuest = 
+            await this.storageBroker.SelectGuestByIdAsync(id);
+
+        return await this.storageBroker.DeleteGuestAsync(gettingGuest);
+    }
 }
