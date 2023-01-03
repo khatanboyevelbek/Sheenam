@@ -23,13 +23,14 @@ public partial class GuestService : IGuestService
         this.loggingBroker = loggingBroker;
     }
 
-    private string CreatePasswordHash(string password)
+    private string GenerateHashPassword(string password)
     {
         byte[] passwordHash;
 
         using (var hmacsha = SHA256.Create())
         {
-            passwordHash = hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
+            passwordHash =
+                hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
         };
 
         return Convert.ToBase64String(passwordHash);
@@ -40,7 +41,7 @@ public partial class GuestService : IGuestService
         {
             ValidateGuestOnAdd(guest);
 
-            guest.Password = CreatePasswordHash(guest.Password);
+            guest.Password = GenerateHashPassword(guest.Password);
 
             return await this.storageBroker.InsertGuestAsync(guest);
         });
@@ -60,7 +61,9 @@ public partial class GuestService : IGuestService
         return TryCatch(async () =>
         {
             ValidateGuestOnModify(guest);
-            guest.Password = CreatePasswordHash(guest.Password);
+
+            guest.Password = GenerateHashPassword(guest.Password);
+
             return await this.storageBroker.UpdateGuestAsync(guest);
         });
     }
