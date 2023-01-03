@@ -59,10 +59,8 @@ namespace Sheenam.Api.Controllers
 
                 return Id;
             }
-            else
-            {
-                throw new UnauthorizedGuestException();
-            }
+
+            throw new UnauthorizedAccessException();
         }
 
         [HttpPost("register")]
@@ -153,8 +151,9 @@ namespace Sheenam.Api.Controllers
                     throw new ForbiddenGuestException();
                 }
             }
-            catch (UnauthorizedGuestException unauthorizedGuestException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedGuestException = new UnauthorizedGuestException();
                 return Unauthorized(unauthorizedGuestException);
             }
             catch (ForbiddenGuestException forbiddenGuestException)
@@ -190,13 +189,12 @@ namespace Sheenam.Api.Controllers
 
                     return Ok(updatedGuest);
                 }
-                else
-                {
-                    throw new ForbiddenGuestException();
-                }
+                throw new ForbiddenGuestException();
+
             }
-            catch (UnauthorizedGuestException unauthorizedGuestException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedGuestException = new UnauthorizedGuestException();
                 return Unauthorized(unauthorizedGuestException);
             }
             catch (ForbiddenGuestException forbiddenGuestException)
@@ -247,8 +245,9 @@ namespace Sheenam.Api.Controllers
                     throw new ForbiddenGuestException();
                 }
             }
-            catch (UnauthorizedGuestException unauthorizedGuestException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedGuestException = new UnauthorizedGuestException();
                 return Unauthorized(unauthorizedGuestException);
             }
             catch (ForbiddenGuestException forbiddenGuestException)

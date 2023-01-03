@@ -59,10 +59,7 @@ namespace Sheenam.Api.Controllers
 
                 return Id;
             }
-            else
-            {
-                throw new UnauthorizedHostException();
-            }
+            throw new UnauthorizedAccessException();
         }
 
         [HttpPost("register")]
@@ -149,8 +146,9 @@ namespace Sheenam.Api.Controllers
                     throw new ForbiddenHostException();
                 }
             }
-            catch (UnauthorizedHostException unauthorizedHostException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedHostException = new UnauthorizedHostException();
                 return Unauthorized(unauthorizedHostException);
             }
             catch (ForbiddenHostException forbiddenHostException)
@@ -191,8 +189,9 @@ namespace Sheenam.Api.Controllers
                     throw new ForbiddenHostException();
                 }
             }
-            catch (UnauthorizedHostException unauthorizedHostException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedHostException = new UnauthorizedHostException();
                 return Unauthorized(unauthorizedHostException);
             }
             catch (ForbiddenHostException forbiddenHostException)
@@ -240,8 +239,9 @@ namespace Sheenam.Api.Controllers
                     throw new ForbiddenHostException();
                 }
             }
-            catch (UnauthorizedHostException unauthorizedHostException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedHostException = new UnauthorizedHostException();
                 return Unauthorized(unauthorizedHostException);
             }
             catch (ForbiddenHostException forbiddenHostException)

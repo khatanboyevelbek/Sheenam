@@ -10,7 +10,7 @@ namespace Sheenam.Api.Models.Foundations.Guests.Exceptions
     public class UnauthorizedGuestException : Xeption
     {
         public UnauthorizedGuestException() 
-            :base(message: "Guest request has not been completed. Try again")
+            :base(message: "You must authenticate with a valid Bearer token to access this resource. Try again")
         { }
     }
 }

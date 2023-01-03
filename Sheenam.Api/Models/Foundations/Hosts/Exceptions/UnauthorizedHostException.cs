@@ -10,7 +10,7 @@ namespace Sheenam.Api.Models.Foundations.Hosts.Exceptions
     public class UnauthorizedHostException : Xeption
     {
         public UnauthorizedHostException() 
-            :base(message: "Host request has not been completed. Try again")
+            :base(message: "You must authenticate with a valid Bearer token to access this resource. Try again")
         { }
     }
 }
