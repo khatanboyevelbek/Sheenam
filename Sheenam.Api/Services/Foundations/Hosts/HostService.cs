@@ -17,18 +17,20 @@ namespace Sheenam.Api.Services.Foundations.Hosts
         private readonly ILoggingBroker loggingBroker;
 
         public HostService(IStorageBroker storageBroker,
-            ILoggingBroker loggingBroker)
+           ILoggingBroker loggingBroker)
         {
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
         }
-        private string CreatePasswordHash(string password)
+
+        private string GenerateHashPassword(string password)
         {
             byte[] passwordHash;
 
             using (var hmacsha = SHA256.Create())
             {
-                passwordHash = hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
+                passwordHash =
+                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
             };
 
             return Convert.ToBase64String(passwordHash);
@@ -39,7 +41,8 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             return TryCatch(async () =>
             {
                 ValidationHostOnAdd(host);
-                host.Password = CreatePasswordHash(host.Password);
+
+                host.Password = GenerateHashPassword(host.Password);
 
                 return await this.storageBroker.InsertHostAsync(host);
             });
@@ -60,7 +63,9 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             return TryCatch(async () =>
             {
                 ValidationHostOnModify(host);
-                host.Password = CreatePasswordHash(host.Password);
+
+                host.Password = GenerateHashPassword(host.Password);
+
                 return await this.storageBroker.UpdateHostAsync(host);
             });
         }

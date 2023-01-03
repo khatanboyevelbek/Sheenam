@@ -3,17 +3,13 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using RESTFulSense.Controllers;
-using Sheenam.Api.Models.Foundations.Guests;
-using Sheenam.Api.Models.Foundations.Guests.Exceptions;
+using Sheenam.Api.Helpers.Tokens;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Sheenam.Api.Models.Foundations.LoginModel;
 using Sheenam.Api.Services.Foundations.Hosts;
@@ -27,49 +23,27 @@ namespace Sheenam.Api.Controllers
     {
         private readonly IHostService hostService;
         private readonly IConfiguration configuration;
+        private readonly IGenerateToken generateToken;
 
         public HostsController(IHostService hostService,
-            IConfiguration configuration)
+            IConfiguration configuration, IGenerateToken generateToken)
         {
             this.hostService = hostService;
             this.configuration = configuration;
+            this.generateToken = generateToken;
         }
 
-        private string CreatePasswordHash(string password)
+        private string GenerateHashPassword(string password)
         {
             byte[] passwordHash;
 
             using (var hmacsha = SHA256.Create())
             {
-                passwordHash = hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
+                passwordHash =
+                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
             };
 
             return Convert.ToBase64String(passwordHash);
-        }
-
-        private string GenerateJwtToken(Host currentHost)
-        {
-            var securityKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
-
-            var cridentials =
-                new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, currentHost.Id.ToString()),
-                new Claim(ClaimTypes.Email, currentHost.Email),
-            };
-
-            var token = new JwtSecurityToken(
-                configuration["Jwt:Issuer"],
-                configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddHours(6),
-                signingCredentials: cridentials
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private string GetCurrentHost()
@@ -129,19 +103,14 @@ namespace Sheenam.Api.Controllers
             {
                 Host? currentHost = this.hostService.RetrieveAllHosts()
                     .FirstOrDefault(host => host.Email.Trim().ToLower() == 
-                        loginModel.Email.Trim().ToLower()
-                        && host.Password == CreatePasswordHash(loginModel.Password));
+                    loginModel.Email.Trim().ToLower()
+                    && host.Password == GenerateHashPassword(loginModel.Password));
 
                 if(currentHost is not null)
                 {
-                    string generatedJwtToken = GenerateJwtToken(currentHost);
+                    string generatedJwtToken = generateToken.GenerateJwtToken(currentHost);
 
-                    var tokenObject = new
-                    {
-                        Token = generatedJwtToken
-                    };
-
-                    return Ok(JsonSerializer.Serialize(tokenObject));
+                    return Ok(new { HostId = currentHost.Id, Token = generatedJwtToken });
                 }
                 else
                 {

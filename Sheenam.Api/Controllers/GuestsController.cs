@@ -3,15 +3,13 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using RESTFulSense.Controllers;
+using Sheenam.Api.Helpers.Tokens;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.LoginModel;
@@ -25,15 +23,17 @@ namespace Sheenam.Api.Controllers
     {
         private readonly IGuestService guestService;
         private readonly IConfiguration configuration;
+        private readonly IGenerateToken generateToken;
 
         public GuestsController(IGuestService guestService,
-            IConfiguration configuration)
+            IConfiguration configuration, IGenerateToken generateToken)
         {
             this.guestService = guestService;
             this.configuration = configuration;
-
+            this.generateToken = generateToken;
         }
-        private string CreatePasswordHash(string password)
+
+        private string GenerateHashPassword(string password)
         {
             byte[] passwordHash;
 
@@ -44,30 +44,6 @@ namespace Sheenam.Api.Controllers
             };
 
             return Convert.ToBase64String(passwordHash);
-        }
-
-        private string GenerateJwtToken(Guest currentGuest)
-        {
-            var securityKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
-
-            var cridentials =
-                new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.NameIdentifier, currentGuest.Id.ToString())
-            };
-
-            var token = new JwtSecurityToken(
-                configuration["Jwt:Issuer"],
-                configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddHours(6),
-                signingCredentials: cridentials
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         private string GetCurrentGuest()
@@ -130,18 +106,13 @@ namespace Sheenam.Api.Controllers
                 Guest? currentGuest =
                     this.guestService.RetrieveAllGuests().FirstOrDefault(
                     guest => guest.Email.Trim().ToLower() == loginModel.Email.Trim().ToLower()
-                    && guest.Password == CreatePasswordHash(loginModel.Password));
+                    && guest.Password == GenerateHashPassword(loginModel.Password));
 
                 if (currentGuest is not null)
                 {
-                    string generatedJwtToken = GenerateJwtToken(currentGuest);
+                    string generatedJwtToken = generateToken.GenerateJwtToken(currentGuest);
 
-                    var tokenObject = new
-                    {
-                        Token = generatedJwtToken
-                    };
-
-                    return Ok(tokenObject);
+                    return Ok(new {GuestId = currentGuest.Id, Token = generatedJwtToken});
                 }
                 else
                 {

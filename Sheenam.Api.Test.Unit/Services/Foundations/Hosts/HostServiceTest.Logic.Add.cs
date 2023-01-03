@@ -15,17 +15,6 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
 {
     public partial class HostServiceTest
     {
-        private string CreatePasswordHash(string password)
-        {
-            byte[] passwordHash;
-
-            using (var hmacsha = SHA256.Create())
-            {
-                passwordHash = hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
-            };
-
-            return Convert.ToBase64String(passwordHash);
-        }
 
         [Fact]
         public async Task ShouldAddHostAsync()
@@ -37,7 +26,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             Host expectedHost = returnedHost.DeepClone();
 
             expectedHost.Password =
-                CreatePasswordHash(expectedHost.Password);
+                GenerateHashPassword(expectedHost.Password);
 
             this.storageBrokerMock.Setup(broker =>
                broker.InsertHostAsync(inputHost))

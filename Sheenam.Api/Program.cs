@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
+using Sheenam.Api.Helpers.Tokens;
 using Sheenam.Api.Services.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Hosts;
 
@@ -67,6 +68,8 @@ namespace Sheenam.Api
                             ValidateLifetime = true
                         };
                     });
+
+            builder.Services.AddSingleton<IGenerateToken, GenerateToken>();
         }
 
         private static void AddBrokers(WebApplicationBuilder builder)

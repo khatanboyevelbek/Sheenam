@@ -5,6 +5,8 @@
 
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
@@ -29,6 +31,19 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
 
             this.hostservice = new HostService(storageBroker: storageBrokerMock.Object,
                 loggingBroker: loggingBrokerMock.Object);
+        }
+
+        private string GenerateHashPassword(string password)
+        {
+            byte[] passwordHash;
+
+            using (var hmacsha = SHA256.Create())
+            {
+                passwordHash =
+                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
+            };
+
+            return Convert.ToBase64String(passwordHash);
         }
 
         private static string GetRandomString() =>
