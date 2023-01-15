@@ -6,11 +6,11 @@
 using Sheenam.Api.Models.Foundations.Guests;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
-namespace Sheenam.Api.Helpers.Tokens
+namespace Sheenam.Api.Brokers.Tokens
 {
-    public interface IGenerateToken
+    public interface ITokenBroker
     {
-        string GenerateJwtToken(Guest currentUser);
-        string GenerateJwtToken(Host currentHost);
+        string GenerateJWT(Guest currentUser);
+        string GenerateJWT(Host currentHost);
     }
 }

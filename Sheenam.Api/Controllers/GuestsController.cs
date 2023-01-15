@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using Sheenam.Api.Helpers.Tokens;
+using Sheenam.Api.Brokers.Tokens;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.LoginModel;
@@ -23,10 +23,10 @@ namespace Sheenam.Api.Controllers
     {
         private readonly IGuestService guestService;
         private readonly IConfiguration configuration;
-        private readonly IGenerateToken generateToken;
+        private readonly ITokenBroker generateToken;
 
         public GuestsController(IGuestService guestService,
-            IConfiguration configuration, IGenerateToken generateToken)
+            IConfiguration configuration, ITokenBroker generateToken)
         {
             this.guestService = guestService;
             this.configuration = configuration;
