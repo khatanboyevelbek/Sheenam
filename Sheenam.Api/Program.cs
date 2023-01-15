@@ -26,6 +26,7 @@ namespace Sheenam.Api
             AddBrokers(builder);
             AddFoundationServices(builder);
             AddConfigurationServices(builder);
+            AddProcessingServices(builder);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
