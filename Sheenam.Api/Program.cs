@@ -11,6 +11,7 @@ using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Brokers.Tokens;
 using Sheenam.Api.Services.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Hosts;
+using Sheenam.Api.Services.Foundations.Security;
 
 namespace Sheenam.Api
 {
@@ -82,6 +83,7 @@ namespace Sheenam.Api
         {
             builder.Services.AddTransient<IGuestService, GuestService>();
             builder.Services.AddTransient<IHostService, HostService>();
+            builder.Services.AddTransient<ISecurityService, SecurityService>();
         }
     }
 }

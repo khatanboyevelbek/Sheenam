@@ -9,11 +9,11 @@ using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
 namespace Sheenam.Api.Services.Foundations.Security
 {
-    public class SecurityServices
+    public class SecurityService : ISecurityService
     {
         private readonly ITokenBroker tokenBroker;
 
-        public SecurityServices(ITokenBroker tokenBroker) =>
+        public SecurityService(ITokenBroker tokenBroker) =>
             this.tokenBroker = tokenBroker;
 
         public string CreateToken(Guest currentGuest) =>
