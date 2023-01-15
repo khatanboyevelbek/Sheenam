@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using Sheenam.Api.Helpers.Tokens;
+using Sheenam.Api.Brokers.Tokens;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Sheenam.Api.Models.Foundations.LoginModel;
 using Sheenam.Api.Services.Foundations.Hosts;
@@ -23,10 +23,10 @@ namespace Sheenam.Api.Controllers
     {
         private readonly IHostService hostService;
         private readonly IConfiguration configuration;
-        private readonly IGenerateToken generateToken;
+        private readonly ITokenBroker generateToken;
 
         public HostsController(IHostService hostService,
-            IConfiguration configuration, IGenerateToken generateToken)
+            IConfiguration configuration, ITokenBroker generateToken)
         {
             this.hostService = hostService;
             this.configuration = configuration;
@@ -59,10 +59,7 @@ namespace Sheenam.Api.Controllers
 
                 return Id;
             }
-            else
-            {
-                throw new UnauthorizedHostException();
-            }
+            throw new UnauthorizedAccessException();
         }
 
         [HttpPost("register")]
@@ -108,7 +105,7 @@ namespace Sheenam.Api.Controllers
 
                 if(currentHost is not null)
                 {
-                    string generatedJwtToken = generateToken.GenerateJwtToken(currentHost);
+                    string generatedJwtToken = generateToken.GenerateJWT(currentHost);
 
                     return Ok(new { HostId = currentHost.Id, Token = generatedJwtToken });
                 }
@@ -149,8 +146,9 @@ namespace Sheenam.Api.Controllers
                     throw new ForbiddenHostException();
                 }
             }
-            catch (UnauthorizedHostException unauthorizedHostException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedHostException = new UnauthorizedHostException();
                 return Unauthorized(unauthorizedHostException);
             }
             catch (ForbiddenHostException forbiddenHostException)
@@ -191,8 +189,9 @@ namespace Sheenam.Api.Controllers
                     throw new ForbiddenHostException();
                 }
             }
-            catch (UnauthorizedHostException unauthorizedHostException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedHostException = new UnauthorizedHostException();
                 return Unauthorized(unauthorizedHostException);
             }
             catch (ForbiddenHostException forbiddenHostException)
@@ -240,8 +239,9 @@ namespace Sheenam.Api.Controllers
                     throw new ForbiddenHostException();
                 }
             }
-            catch (UnauthorizedHostException unauthorizedHostException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedHostException = new UnauthorizedHostException();
                 return Unauthorized(unauthorizedHostException);
             }
             catch (ForbiddenHostException forbiddenHostException)

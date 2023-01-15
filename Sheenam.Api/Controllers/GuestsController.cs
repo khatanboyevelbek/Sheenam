@@ -9,7 +9,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
-using Sheenam.Api.Helpers.Tokens;
+using Sheenam.Api.Brokers.Tokens;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.LoginModel;
@@ -23,10 +23,10 @@ namespace Sheenam.Api.Controllers
     {
         private readonly IGuestService guestService;
         private readonly IConfiguration configuration;
-        private readonly IGenerateToken generateToken;
+        private readonly ITokenBroker generateToken;
 
         public GuestsController(IGuestService guestService,
-            IConfiguration configuration, IGenerateToken generateToken)
+            IConfiguration configuration, ITokenBroker generateToken)
         {
             this.guestService = guestService;
             this.configuration = configuration;
@@ -59,10 +59,8 @@ namespace Sheenam.Api.Controllers
 
                 return Id;
             }
-            else
-            {
-                throw new UnauthorizedGuestException();
-            }
+
+            throw new UnauthorizedAccessException();
         }
 
         [HttpPost("register")]
@@ -108,16 +106,13 @@ namespace Sheenam.Api.Controllers
                     guest => guest.Email.Trim().ToLower() == loginModel.Email.Trim().ToLower()
                     && guest.Password == GenerateHashPassword(loginModel.Password));
 
-                if (currentGuest is not null)
-                {
-                    string generatedJwtToken = generateToken.GenerateJwtToken(currentGuest);
-
-                    return Ok(new {GuestId = currentGuest.Id, Token = generatedJwtToken});
-                }
-                else
+                if (currentGuest is null)
                 {
                     throw new FailedGuestLoginException();
                 }
+
+                string generatedJwtToken = generateToken.GenerateJWT(currentGuest);
+                return Ok(new { GuestId = currentGuest.Id, Token = generatedJwtToken });
             }
             catch (FailedGuestLoginException failedUserLoginException)
             {
@@ -133,28 +128,29 @@ namespace Sheenam.Api.Controllers
             }
         }
 
-        [HttpGet("{id}")]
         [Authorize]
+        [HttpGet("{id}")]
         public async ValueTask<ActionResult<Guest>> GetGuestByIdAsync([FromRoute] Guid id)
         {
             try
             {
-                var authorizedGuestId = GetCurrentGuest();
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                var userClaims = identity.Claims;
 
-                if (authorizedGuestId == id.ToString())
-                {
-                    Guest currentGuest =
-                        await this.guestService.RetrieveGuestByIdAsync(id);
+                string? authorizedGuestId = userClaims.FirstOrDefault(x => x.Type ==
+                    ClaimTypes.NameIdentifier)?.Value;
 
-                    return Ok(currentGuest);
-                }
-                else
+                if (authorizedGuestId != id.ToString())
                 {
                     throw new ForbiddenGuestException();
                 }
+
+                Guest currentGuest = await this.guestService.RetrieveGuestByIdAsync(id);
+                return Ok(currentGuest);
             }
-            catch (UnauthorizedGuestException unauthorizedGuestException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedGuestException = new UnauthorizedGuestException();
                 return Unauthorized(unauthorizedGuestException);
             }
             catch (ForbiddenGuestException forbiddenGuestException)
@@ -190,13 +186,12 @@ namespace Sheenam.Api.Controllers
 
                     return Ok(updatedGuest);
                 }
-                else
-                {
-                    throw new ForbiddenGuestException();
-                }
+                throw new ForbiddenGuestException();
+
             }
-            catch (UnauthorizedGuestException unauthorizedGuestException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedGuestException = new UnauthorizedGuestException();
                 return Unauthorized(unauthorizedGuestException);
             }
             catch (ForbiddenGuestException forbiddenGuestException)
@@ -247,8 +242,9 @@ namespace Sheenam.Api.Controllers
                     throw new ForbiddenGuestException();
                 }
             }
-            catch (UnauthorizedGuestException unauthorizedGuestException)
+            catch (UnauthorizedAccessException unauthorizedAccessException)
             {
+                var unauthorizedGuestException = new UnauthorizedGuestException();
                 return Unauthorized(unauthorizedGuestException);
             }
             catch (ForbiddenGuestException forbiddenGuestException)
