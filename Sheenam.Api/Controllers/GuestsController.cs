@@ -106,16 +106,13 @@ namespace Sheenam.Api.Controllers
                     guest => guest.Email.Trim().ToLower() == loginModel.Email.Trim().ToLower()
                     && guest.Password == GenerateHashPassword(loginModel.Password));
 
-                if (currentGuest is not null)
-                {
-                    string generatedJwtToken = generateToken.GenerateJwtToken(currentGuest);
-
-                    return Ok(new {GuestId = currentGuest.Id, Token = generatedJwtToken});
-                }
-                else
+                if (currentGuest is null)
                 {
                     throw new FailedGuestLoginException();
                 }
+
+                string generatedJwtToken = generateToken.GenerateJwtToken(currentGuest);
+                return Ok(new { GuestId = currentGuest.Id, Token = generatedJwtToken });
             }
             catch (FailedGuestLoginException failedUserLoginException)
             {
@@ -131,25 +128,25 @@ namespace Sheenam.Api.Controllers
             }
         }
 
-        [HttpGet("{id}")]
         [Authorize]
+        [HttpGet("{id}")]
         public async ValueTask<ActionResult<Guest>> GetGuestByIdAsync([FromRoute] Guid id)
         {
             try
             {
-                var authorizedGuestId = GetCurrentGuest();
+                var identity = HttpContext.User.Identity as ClaimsIdentity;
+                var userClaims = identity.Claims;
 
-                if (authorizedGuestId == id.ToString())
-                {
-                    Guest currentGuest =
-                        await this.guestService.RetrieveGuestByIdAsync(id);
+                string? authorizedGuestId = userClaims.FirstOrDefault(x => x.Type ==
+                    ClaimTypes.NameIdentifier)?.Value;
 
-                    return Ok(currentGuest);
-                }
-                else
+                if (authorizedGuestId != id.ToString())
                 {
                     throw new ForbiddenGuestException();
                 }
+
+                Guest currentGuest = await this.guestService.RetrieveGuestByIdAsync(id);
+                return Ok(currentGuest);
             }
             catch (UnauthorizedAccessException unauthorizedAccessException)
             {
