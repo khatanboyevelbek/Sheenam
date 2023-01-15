@@ -6,7 +6,7 @@
 using Sheenam.Api.Models.Foundations.Guests;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
-namespace Sheenam.Api.Services.Processings
+namespace Sheenam.Api.Services.Processings.Security
 {
     public interface IUserProcessingService
     {

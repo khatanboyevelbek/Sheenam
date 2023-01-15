@@ -7,7 +7,7 @@ using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Security;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
-namespace Sheenam.Api.Services.Processings
+namespace Sheenam.Api.Services.Processings.Security
 {
     public class UserProcessingService : IUserProcessingService
     {
@@ -16,10 +16,10 @@ namespace Sheenam.Api.Services.Processings
         public UserProcessingService(ISecurityService securityService) =>
              this.securityService = securityService;
 
-        public string CreateToken(Guest currentGuest) => 
-            this.securityService.CreateToken(currentGuest);
+        public string CreateToken(Guest currentGuest) =>
+            securityService.CreateToken(currentGuest);
 
         public string CreateToken(Host currentHost) =>
-            this.securityService.CreateToken(currentHost);
+            securityService.CreateToken(currentHost);
     }
 }
