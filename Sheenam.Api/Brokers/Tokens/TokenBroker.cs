@@ -57,14 +57,15 @@ namespace Sheenam.Api.Brokers.Tokens
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, currentHost.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, currentHost.Id.ToString()),
+                new Claim(ClaimTypes.Email, currentHost.Email)
             };
 
             var token = new JwtSecurityToken(
                 configuration["Jwt:Issuer"],
                 configuration["Jwt:Audience"],
                 claims,
-                expires: DateTime.Now.AddHours(6),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: cridentials
                 );
 
