@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
+using Sheenam.Api.Brokers.Tokens;
 using Sheenam.Api.Services.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Hosts;
 
@@ -68,14 +69,13 @@ namespace Sheenam.Api
                             ValidateLifetime = true
                         };
                     });
-
-            builder.Services.AddSingleton<IGenerateToken, GenerateToken>();
         }
 
         private static void AddBrokers(WebApplicationBuilder builder)
         {
             builder.Services.AddTransient<IStorageBroker, StorageBroker>();
             builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
+            builder.Services.AddSingleton<ITokenBroker, TokenBroker>();
         }
 
         private static void AddFoundationServices(WebApplicationBuilder builder)
