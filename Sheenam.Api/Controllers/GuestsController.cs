@@ -111,7 +111,7 @@ namespace Sheenam.Api.Controllers
                     throw new FailedGuestLoginException();
                 }
 
-                string generatedJwtToken = generateToken.GenerateJwtToken(currentGuest);
+                string generatedJwtToken = generateToken.GenerateJWT(currentGuest);
                 return Ok(new { GuestId = currentGuest.Id, Token = generatedJwtToken });
             }
             catch (FailedGuestLoginException failedUserLoginException)

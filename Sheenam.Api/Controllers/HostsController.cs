@@ -105,7 +105,7 @@ namespace Sheenam.Api.Controllers
 
                 if(currentHost is not null)
                 {
-                    string generatedJwtToken = generateToken.GenerateJwtToken(currentHost);
+                    string generatedJwtToken = generateToken.GenerateJWT(currentHost);
 
                     return Ok(new { HostId = currentHost.Id, Token = generatedJwtToken });
                 }
