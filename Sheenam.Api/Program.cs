@@ -12,6 +12,7 @@ using Sheenam.Api.Brokers.Tokens;
 using Sheenam.Api.Services.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Hosts;
 using Sheenam.Api.Services.Foundations.Security;
+using Sheenam.Api.Services.Processings.Security;
 
 namespace Sheenam.Api
 {
@@ -25,6 +26,7 @@ namespace Sheenam.Api
             AddBrokers(builder);
             AddFoundationServices(builder);
             AddConfigurationServices(builder);
+            AddProcessingServices(builder);
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -84,6 +86,11 @@ namespace Sheenam.Api
             builder.Services.AddTransient<IGuestService, GuestService>();
             builder.Services.AddTransient<IHostService, HostService>();
             builder.Services.AddTransient<ISecurityService, SecurityService>();
+        }
+
+        private static void AddProcessingServices(WebApplicationBuilder builder)
+        {
+            builder.Services.AddTransient<IUserProcessingService, UserProcessingService>();
         }
     }
 }
