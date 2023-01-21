@@ -5,7 +5,7 @@
 
 using Microsoft.IdentityModel.Tokens;
 using Sheenam.Api.Models.Foundations.Guests;
-using System.Collections;
+using Sheenam.Api.Models.Processings.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -15,17 +15,21 @@ namespace Sheenam.Api.Brokers.Tokens
 {
     public class TokenBroker : ITokenBroker
     {
-        private IConfiguration configuration;
+        private readonly TokenConfiguration tokenConfiguration;
 
         public TokenBroker(IConfiguration configuration)
         {
-            this.configuration = configuration;
+            tokenConfiguration = new TokenConfiguration();
+            configuration.Bind("Jwt", tokenConfiguration);
         }
 
         public string GenerateJWT(Guest currentGuest)
         {
+            byte[] convertKeyToBytes = 
+                Encoding.UTF8.GetBytes(tokenConfiguration.Key);
+
             var securityKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+                        new SymmetricSecurityKey(convertKeyToBytes);
 
             var cridentials =
                 new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -37,8 +41,8 @@ namespace Sheenam.Api.Brokers.Tokens
             };
 
             var token = new JwtSecurityToken(
-                configuration["Jwt:Issuer"],
-                configuration["Jwt:Audience"],
+                tokenConfiguration.Issuer,
+                tokenConfiguration.Audience,
                 claims,
                 expires: DateTime.Now.AddDays(1),
                 signingCredentials: cridentials
@@ -49,8 +53,11 @@ namespace Sheenam.Api.Brokers.Tokens
 
         public string GenerateJWT(Host currentHost)
         {
+            byte[] convertKeyToBytes =
+                Encoding.UTF8.GetBytes(tokenConfiguration.Key);
+
             var securityKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+                        new SymmetricSecurityKey(convertKeyToBytes);
 
             var cridentials =
                 new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -62,8 +69,8 @@ namespace Sheenam.Api.Brokers.Tokens
             };
 
             var token = new JwtSecurityToken(
-                configuration["Jwt:Issuer"],
-                configuration["Jwt:Audience"],
+                tokenConfiguration.Issuer,
+                tokenConfiguration.Audience,
                 claims,
                 expires: DateTime.Now.AddDays(1),
                 signingCredentials: cridentials

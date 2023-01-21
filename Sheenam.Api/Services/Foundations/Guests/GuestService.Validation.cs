@@ -3,7 +3,6 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using Sheenam.Api.Models.Foundations;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 
@@ -63,7 +62,7 @@ public partial class GuestService
         Message = "Text is invalid"
     };
 
-    private static dynamic IsInvalid(GenderType gender) => new
+    private static dynamic IsInvalid(GuestGenderType gender) => new
     {
         Condition = Enum.IsDefined(gender) is false,
         Message = "Value is invalid"

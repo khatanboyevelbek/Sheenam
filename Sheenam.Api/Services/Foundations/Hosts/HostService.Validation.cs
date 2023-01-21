@@ -3,9 +3,7 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.Data;
-using System.Reflection.Metadata;
-using Sheenam.Api.Models.Foundations;
+using Sheenam.Api.Models.Foundations.Hosts;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
@@ -67,7 +65,7 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             Condition = date == default,
             Message = "Date is required"
         };
-        private static dynamic isInvalid(GenderType gender) => new
+        private static dynamic isInvalid(HostGenderType gender) => new
         {
             Condition = Enum.IsDefined(gender) is false,
             Message = "Value is invalid"

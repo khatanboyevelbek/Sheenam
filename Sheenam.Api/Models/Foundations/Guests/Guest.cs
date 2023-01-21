@@ -15,6 +15,6 @@ namespace Sheenam.Api.Models.Foundations.Guests
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
-        public GenderType Gender { get; set; }
+        public GuestGenderType Gender { get; set; }
     }
 }
