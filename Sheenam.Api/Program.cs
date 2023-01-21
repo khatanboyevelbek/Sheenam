@@ -11,8 +11,10 @@ using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Brokers.Tokens;
 using Sheenam.Api.Services.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Hosts;
-using Sheenam.Api.Services.Foundations.Security;
-using Sheenam.Api.Services.Processings.Security;
+using Sheenam.Api.Services.Foundations.Security.GuestSecurity;
+using Sheenam.Api.Services.Foundations.Security.HostSecurity;
+using Sheenam.Api.Services.Processings.SecurityProcessing.GuestSecurityPocessing;
+using Sheenam.Api.Services.Processings.SecurityProcessing.HostSecurityProcessing;
 
 namespace Sheenam.Api
 {
@@ -86,12 +88,14 @@ namespace Sheenam.Api
         {
             builder.Services.AddTransient<IGuestService, GuestService>();
             builder.Services.AddTransient<IHostService, HostService>();
-            builder.Services.AddTransient<ISecurityService, SecurityService>();
+            builder.Services.AddTransient<IGuestSecurityService, GuestSecurityService>();
+            builder.Services.AddTransient<IHostSecurityService, HostSecurityService>();
         }
 
         private static void AddProcessingServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddTransient<IUserProcessingService, UserProcessingService>();
+            builder.Services.AddTransient<IGuestSecurityProcessingService, GuestSecurityProcessingService>();
+            builder.Services.AddTransient<IHostSecurityProcessingService, HostSecurityProcessingService>();
         }
     }
 }

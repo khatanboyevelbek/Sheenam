@@ -4,14 +4,11 @@
 // ---------------------------------------------------
 
 using Sheenam.Api.Models.Foundations.Guests;
-using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
-namespace Sheenam.Api.Services.Foundations.Security
+namespace Sheenam.Api.Services.Foundations.Security.GuestSecurity
 {
-    public interface ISecurityService
+    public interface IGuestSecurityService
     {
         string CreateToken(Guest currentGuest);
-        string CreateToken(Host currentHost);
-
     }
 }
