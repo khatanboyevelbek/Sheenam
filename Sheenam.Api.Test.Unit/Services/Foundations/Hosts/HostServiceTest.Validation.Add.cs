@@ -5,6 +5,7 @@
 
 using Moq;
 using Sheenam.Api.Models.Foundations.Guests;
+using Sheenam.Api.Models.Foundations.Hosts;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Xunit;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
@@ -92,7 +93,7 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
         {
             // given
             Host randomHost = CreateRandomHost();
-            randomHost.Gender = GetInvalidEnum<GuestGenderType>();
+            randomHost.Gender = GetInvalidEnum<HostGenderType>();
             var invalidHostException = new InvalidHostException();
 
             invalidHostException.AddData(key: nameof(Host.Gender),
