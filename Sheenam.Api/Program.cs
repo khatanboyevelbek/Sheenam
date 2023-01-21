@@ -57,14 +57,15 @@ namespace Sheenam.Api
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(jwt =>
                     {
-                        var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
+                        string? key = builder.Configuration.GetSection("Jwt").GetValue<string>("Key");
+                        byte[] convertKeyToBytes = Encoding.ASCII.GetBytes(key);
 
                         jwt.TokenValidationParameters = new TokenValidationParameters()
                         {
                             ValidateIssuerSigningKey = true,
 
                             IssuerSigningKey =
-                                new SymmetricSecurityKey(key),
+                                new SymmetricSecurityKey(convertKeyToBytes),
 
                             ValidateIssuer = false,
                             ValidateAudience = false,
