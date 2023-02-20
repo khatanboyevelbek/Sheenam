@@ -3,8 +3,6 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.Security.Cryptography;
-using System.Text;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
@@ -21,19 +19,6 @@ namespace Sheenam.Api.Services.Foundations.Hosts
         {
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
-        }
-
-        private string GenerateHashPassword(string password)
-        {
-            byte[] passwordHash;
-
-            using (var hmacsha = SHA256.Create())
-            {
-                passwordHash =
-                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
-            };
-
-            return Convert.ToBase64String(passwordHash);
         }
 
         public ValueTask<Host> AddHostAsync(Host host)
