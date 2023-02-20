@@ -43,6 +43,8 @@ namespace Sheenam.Api.Services.Foundations.Hosts
                 ValidationHostOnAdd(host);
 
                 host.Password = GenerateHashPassword(host.Password);
+                host.CreatedDate = DateTimeOffset.UtcNow;
+                host.UpdatedDate = DateTimeOffset.UtcNow;
 
                 return await this.storageBroker.InsertHostAsync(host);
             });
@@ -65,6 +67,7 @@ namespace Sheenam.Api.Services.Foundations.Hosts
                 ValidationHostOnModify(host);
 
                 host.Password = GenerateHashPassword(host.Password);
+                host.UpdatedDate = DateTimeOffset.UtcNow;
 
                 return await this.storageBroker.UpdateHostAsync(host);
             });
