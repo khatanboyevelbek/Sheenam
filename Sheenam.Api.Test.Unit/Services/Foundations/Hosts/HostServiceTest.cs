@@ -12,6 +12,7 @@ using Moq;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Services.Foundations.Hosts;
+using Sheenam.Api.Services.Foundations.Security.PasswordHash;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
@@ -22,28 +23,18 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
+        private readonly Mock<IPasswordHashServise> passwordHashService;
         private readonly IHostService hostservice;
 
         public HostServiceTest()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.passwordHashService = new Mock<IPasswordHashServise>();
 
             this.hostservice = new HostService(storageBroker: storageBrokerMock.Object,
-                loggingBroker: loggingBrokerMock.Object);
-        }
-
-        private string GenerateHashPassword(string password)
-        {
-            byte[] passwordHash;
-
-            using (var hmacsha = SHA256.Create())
-            {
-                passwordHash =
-                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
-            };
-
-            return Convert.ToBase64String(passwordHash);
+                loggingBroker: loggingBrokerMock.Object,
+                passwordHashService: this.passwordHashService.Object);
         }
 
         private static string GetRandomString() =>

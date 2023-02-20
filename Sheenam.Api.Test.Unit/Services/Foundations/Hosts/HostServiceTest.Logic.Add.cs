@@ -25,9 +25,6 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Hosts
             Host returnedHost = inputHost;
             Host expectedHost = returnedHost.DeepClone();
 
-            expectedHost.Password =
-                GenerateHashPassword(expectedHost.Password);
-
             this.storageBrokerMock.Setup(broker =>
                broker.InsertHostAsync(inputHost))
                  .ReturnsAsync(expectedHost);
