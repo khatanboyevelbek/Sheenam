@@ -2,6 +2,6 @@
 {
     public interface IPasswordHashServise
     {
-        public string GenerateHashPassword(string password);
+        string GenerateHashPassword(string password);
     }
 }

@@ -5,6 +5,7 @@
 
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
+using Sheenam.Api.Services.Foundations.Security.PasswordHash;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
 namespace Sheenam.Api.Services.Foundations.Hosts
@@ -13,12 +14,15 @@ namespace Sheenam.Api.Services.Foundations.Hosts
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
+        private readonly IPasswordHashServise passwordHashService;
 
         public HostService(IStorageBroker storageBroker,
-           ILoggingBroker loggingBroker)
+           ILoggingBroker loggingBroker,
+           IPasswordHashServise passwordHashService)
         {
             this.storageBroker = storageBroker;
             this.loggingBroker = loggingBroker;
+            this.passwordHashService = passwordHashService;
         }
 
         public ValueTask<Host> AddHostAsync(Host host)
@@ -27,7 +31,9 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             {
                 ValidationHostOnAdd(host);
 
-                host.Password = GenerateHashPassword(host.Password);
+                host.Password = 
+                    this.passwordHashService.GenerateHashPassword(host.Password);
+
                 host.CreatedDate = DateTimeOffset.UtcNow;
                 host.UpdatedDate = DateTimeOffset.UtcNow;
 
@@ -51,7 +57,9 @@ namespace Sheenam.Api.Services.Foundations.Hosts
             {
                 ValidationHostOnModify(host);
 
-                host.Password = GenerateHashPassword(host.Password);
+                host.Password = 
+                    this.passwordHashService.GenerateHashPassword(host.Password);
+
                 host.UpdatedDate = DateTimeOffset.UtcNow;
 
                 return await this.storageBroker.UpdateHostAsync(host);
