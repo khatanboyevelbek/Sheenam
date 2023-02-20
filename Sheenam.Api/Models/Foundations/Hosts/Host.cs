@@ -17,5 +17,7 @@ namespace Sheenam.Api.Models.Foundations.Hosts
         public string Password { get; set; }
         public string PhoneNumber { get; set; }
         public HostGenderType Gender { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
     }
 }
