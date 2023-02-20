@@ -42,6 +42,8 @@ public partial class GuestService : IGuestService
             ValidateGuestOnAdd(guest);
 
             guest.Password = GenerateHashPassword(guest.Password);
+            guest.CreatedDate = DateTimeOffset.UtcNow;
+            guest.UpdatedDate = DateTimeOffset.UtcNow;
 
             return await this.storageBroker.InsertGuestAsync(guest);
         });
@@ -63,6 +65,7 @@ public partial class GuestService : IGuestService
             ValidateGuestOnModify(guest);
 
             guest.Password = GenerateHashPassword(guest.Password);
+            guest.UpdatedDate = DateTimeOffset.UtcNow;
 
             return await this.storageBroker.UpdateGuestAsync(guest);
         });
