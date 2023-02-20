@@ -3,11 +3,10 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
-using System.Security.Cryptography;
-using System.Text;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Guests;
+using Sheenam.Api.Services.Foundations.Security.PasswordHash;
 
 namespace Sheenam.Api.Services.Foundations.Guests;
 
@@ -15,25 +14,15 @@ public partial class GuestService : IGuestService
 {
     private readonly IStorageBroker storageBroker;
     private readonly ILoggingBroker loggingBroker;
+    private readonly IPasswordHashServise passwordHashServise;
 
     public GuestService(IStorageBroker storageBroker,
-        ILoggingBroker loggingBroker)
+        ILoggingBroker loggingBroker,
+        IPasswordHashServise passwordHashServise)
     {
         this.storageBroker = storageBroker;
         this.loggingBroker = loggingBroker;
-    }
-
-    private string GenerateHashPassword(string password)
-    {
-        byte[] passwordHash;
-
-        using (var hmacsha = SHA256.Create())
-        {
-            passwordHash =
-                hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
-        };
-
-        return Convert.ToBase64String(passwordHash);
+        this.passwordHashServise = passwordHashServise;
     }
 
     public ValueTask<Guest> AddGuestAsync(Guest guest) =>
@@ -41,7 +30,9 @@ public partial class GuestService : IGuestService
         {
             ValidateGuestOnAdd(guest);
 
-            guest.Password = GenerateHashPassword(guest.Password);
+            guest.Password = 
+                this.passwordHashServise.GenerateHashPassword(guest.Password);
+
             guest.CreatedDate = DateTimeOffset.UtcNow;
             guest.UpdatedDate = DateTimeOffset.UtcNow;
 
@@ -64,7 +55,9 @@ public partial class GuestService : IGuestService
         {
             ValidateGuestOnModify(guest);
 
-            guest.Password = GenerateHashPassword(guest.Password);
+            guest.Password =
+                this.passwordHashServise.GenerateHashPassword(guest.Password);
+
             guest.UpdatedDate = DateTimeOffset.UtcNow;
 
             return await this.storageBroker.UpdateGuestAsync(guest);
