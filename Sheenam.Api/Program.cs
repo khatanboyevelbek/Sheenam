@@ -13,6 +13,7 @@ using Sheenam.Api.Services.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Hosts;
 using Sheenam.Api.Services.Foundations.Security.GuestSecurity;
 using Sheenam.Api.Services.Foundations.Security.HostSecurity;
+using Sheenam.Api.Services.Foundations.Security.PasswordHash;
 using Sheenam.Api.Services.Processings.GuestProcessing;
 using Sheenam.Api.Services.Processings.HostProcessing;
 using Sheenam.Api.Services.Processings.SecurityProcessing.GuestSecurityPocessing;
@@ -90,6 +91,7 @@ namespace Sheenam.Api
         {
             builder.Services.AddTransient<IGuestService, GuestService>();
             builder.Services.AddTransient<IHostService, HostService>();
+            builder.Services.AddScoped<IPasswordHashServise, PasswordHashServise>();
             builder.Services.AddTransient<IGuestSecurityService, GuestSecurityService>();
             builder.Services.AddTransient<IHostSecurityService, HostSecurityService>();
         }
