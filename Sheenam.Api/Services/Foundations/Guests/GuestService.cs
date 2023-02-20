@@ -14,7 +14,7 @@ public partial class GuestService : IGuestService
 {
     private readonly IStorageBroker storageBroker;
     private readonly ILoggingBroker loggingBroker;
-    private readonly IPasswordHashServise passwordHashServise;
+    private readonly IPasswordHashServise passwordHashService;
 
     public GuestService(IStorageBroker storageBroker,
         ILoggingBroker loggingBroker,
@@ -22,7 +22,7 @@ public partial class GuestService : IGuestService
     {
         this.storageBroker = storageBroker;
         this.loggingBroker = loggingBroker;
-        this.passwordHashServise = passwordHashServise;
+        this.passwordHashService = passwordHashServise;
     }
 
     public ValueTask<Guest> AddGuestAsync(Guest guest) =>
@@ -31,7 +31,7 @@ public partial class GuestService : IGuestService
             ValidateGuestOnAdd(guest);
 
             guest.Password = 
-                this.passwordHashServise.GenerateHashPassword(guest.Password);
+                this.passwordHashService.GenerateHashPassword(guest.Password);
 
             guest.CreatedDate = DateTimeOffset.UtcNow;
             guest.UpdatedDate = DateTimeOffset.UtcNow;
@@ -56,7 +56,7 @@ public partial class GuestService : IGuestService
             ValidateGuestOnModify(guest);
 
             guest.Password =
-                this.passwordHashServise.GenerateHashPassword(guest.Password);
+                this.passwordHashService.GenerateHashPassword(guest.Password);
 
             guest.UpdatedDate = DateTimeOffset.UtcNow;
 

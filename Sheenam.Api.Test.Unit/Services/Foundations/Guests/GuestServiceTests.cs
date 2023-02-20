@@ -5,14 +5,13 @@
 
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
-using System.Security.Cryptography;
-using System.Text;
 using Microsoft.Data.SqlClient;
 using Moq;
 using Sheenam.Api.Brokers.Loggings;
 using Sheenam.Api.Brokers.Storages;
 using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Services.Foundations.Guests;
+using Sheenam.Api.Services.Foundations.Security.PasswordHash;
 using Tynamix.ObjectFiller;
 using Xeptions;
 
@@ -22,29 +21,19 @@ namespace Sheenam.Api.Test.Unit.Services.Foundations.Guests
     {
         private readonly Mock<IStorageBroker> storageBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
+        private readonly Mock<IPasswordHashServise> passwordHashService;
         private readonly IGuestService guestService;
 
         public GuestServiceTests()
         {
             this.storageBrokerMock = new Mock<IStorageBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
+            this.passwordHashService = new Mock<IPasswordHashServise>();
 
             this.guestService =
                 new GuestService(storageBroker: this.storageBrokerMock.Object,
-                loggingBroker: this.loggingBrokerMock.Object);
-        }
-
-        private string GenerateHashPassword(string password)
-        {
-            byte[] passwordHash;
-
-            using (var hmacsha = SHA256.Create())
-            {
-                passwordHash =
-                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
-            };
-
-            return Convert.ToBase64String(passwordHash);
+                loggingBroker: this.loggingBrokerMock.Object,
+                passwordHashServise: this.passwordHashService.Object);
         }
 
         private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
