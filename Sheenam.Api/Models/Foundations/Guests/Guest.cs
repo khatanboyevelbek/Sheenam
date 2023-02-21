@@ -3,6 +3,9 @@
 // Free to use to find comfort and pease
 // ---------------------------------------------------
 
+using Sheenam.Api.Models.Foundations.HomeRequests;
+using Sheenam.Api.Models.Foundations.Homes;
+
 namespace Sheenam.Api.Models.Foundations.Guests
 {
     public class Guest
@@ -18,5 +21,7 @@ namespace Sheenam.Api.Models.Foundations.Guests
         public GuestGenderType Gender { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        public IEnumerable<HomeRequest> HomeRequests { get; set; }
     }
 }

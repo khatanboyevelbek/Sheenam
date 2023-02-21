@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Sheenam.Api.Models.Foundations.HomeRequests;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
 namespace Sheenam.Api.Models.Foundations.Homes
@@ -17,5 +18,7 @@ namespace Sheenam.Api.Models.Foundations.Homes
         public Host Host { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        public IEnumerable<HomeRequest> Requests { get; set; }
     }
 }
