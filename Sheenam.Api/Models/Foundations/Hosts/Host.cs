@@ -4,6 +4,7 @@
 // ---------------------------------------------------
 
 using Sheenam.Api.Models.Foundations.Guests;
+using Sheenam.Api.Models.Foundations.Homes;
 
 namespace Sheenam.Api.Models.Foundations.Hosts
 {
@@ -19,5 +20,7 @@ namespace Sheenam.Api.Models.Foundations.Hosts
         public HostGenderType Gender { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public DateTimeOffset UpdatedDate { get; set; }
+
+        public IEnumerable<Home> Homes { get; set; }
     }
 }

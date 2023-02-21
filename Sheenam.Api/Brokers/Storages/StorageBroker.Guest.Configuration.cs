@@ -11,7 +11,7 @@ namespace Sheenam.Api.Brokers.Storages
 {
     public partial class StorageBroker : EFxceptionsContext
     {
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        private static void AddGuestStorageConfiguration(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Guest>()
                 .Property(guest => guest.FirstName)

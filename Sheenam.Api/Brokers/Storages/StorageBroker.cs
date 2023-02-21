@@ -58,6 +58,13 @@ namespace Sheenam.Api.Brokers.Storages
             return @object;
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            AddGuestStorageConfiguration(modelBuilder);
+            AddHomeStorageConfiguration(modelBuilder);
+        }
+
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             string? connectionString =
