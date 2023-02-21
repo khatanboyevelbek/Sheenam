@@ -15,5 +15,7 @@ namespace Sheenam.Api.Models.Foundations.Homes
         public bool IsShared { get; set; }
         public Guid HostId { get; set; }
         public Host Host { get; set; }
+        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset UpdatedDate { get; set; }
     }
 }
