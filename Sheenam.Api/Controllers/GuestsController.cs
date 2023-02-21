@@ -4,8 +4,6 @@
 // ---------------------------------------------------
 
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
@@ -14,6 +12,7 @@ using Sheenam.Api.Models.Foundations.Guests;
 using Sheenam.Api.Models.Foundations.Guests.Exceptions;
 using Sheenam.Api.Models.Foundations.LoginModel;
 using Sheenam.Api.Services.Foundations.Guests;
+using Sheenam.Api.Services.Foundations.Security.PasswordHash;
 
 namespace Sheenam.Api.Controllers
 {
@@ -24,26 +23,16 @@ namespace Sheenam.Api.Controllers
         private readonly IGuestService guestService;
         private readonly IConfiguration configuration;
         private readonly ITokenBroker generateToken;
+        private readonly IPasswordHashServise passwordHashServise;
 
         public GuestsController(IGuestService guestService,
-            IConfiguration configuration, ITokenBroker generateToken)
+            IConfiguration configuration, ITokenBroker generateToken,
+            IPasswordHashServise passwordHashServise)
         {
             this.guestService = guestService;
             this.configuration = configuration;
             this.generateToken = generateToken;
-        }
-
-        private string GenerateHashPassword(string password)
-        {
-            byte[] passwordHash;
-
-            using (var hmacsha = SHA256.Create())
-            {
-                passwordHash =
-                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
-            };
-
-            return Convert.ToBase64String(passwordHash);
+            this.passwordHashServise = passwordHashServise;
         }
 
         private string GetCurrentGuest()
@@ -104,7 +93,7 @@ namespace Sheenam.Api.Controllers
                 Guest? currentGuest =
                     this.guestService.RetrieveAllGuests().FirstOrDefault(
                     guest => guest.Email.Trim().ToLower() == loginModel.Email.Trim().ToLower()
-                    && guest.Password == GenerateHashPassword(loginModel.Password));
+                    && guest.Password == this.passwordHashServise.GenerateHashPassword(loginModel.Password));
 
                 if (currentGuest is null)
                 {
@@ -112,7 +101,7 @@ namespace Sheenam.Api.Controllers
                 }
 
                 string generatedJwtToken = generateToken.GenerateJWT(currentGuest);
-                return Ok(new { GuestId = currentGuest.Id, Token = generatedJwtToken });
+                return Ok(new { Token = generatedJwtToken });
             }
             catch (FailedGuestLoginException failedUserLoginException)
             {

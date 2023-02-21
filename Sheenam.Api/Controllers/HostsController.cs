@@ -4,8 +4,6 @@
 // ---------------------------------------------------
 
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
@@ -13,6 +11,7 @@ using Sheenam.Api.Brokers.Tokens;
 using Sheenam.Api.Models.Foundations.Hosts.Exceptions;
 using Sheenam.Api.Models.Foundations.LoginModel;
 using Sheenam.Api.Services.Foundations.Hosts;
+using Sheenam.Api.Services.Foundations.Security.PasswordHash;
 using Host = Sheenam.Api.Models.Foundations.Hosts.Host;
 
 namespace Sheenam.Api.Controllers
@@ -24,26 +23,16 @@ namespace Sheenam.Api.Controllers
         private readonly IHostService hostService;
         private readonly IConfiguration configuration;
         private readonly ITokenBroker generateToken;
+        private readonly IPasswordHashServise passwordHashServise;
 
         public HostsController(IHostService hostService,
-            IConfiguration configuration, ITokenBroker generateToken)
+            IConfiguration configuration, ITokenBroker generateToken,
+            IPasswordHashServise passwordHashServise)
         {
             this.hostService = hostService;
             this.configuration = configuration;
             this.generateToken = generateToken;
-        }
-
-        private string GenerateHashPassword(string password)
-        {
-            byte[] passwordHash;
-
-            using (var hmacsha = SHA256.Create())
-            {
-                passwordHash =
-                    hmacsha.ComputeHash(Encoding.Default.GetBytes(password));
-            };
-
-            return Convert.ToBase64String(passwordHash);
+            this.passwordHashServise = passwordHashServise;
         }
 
         private string GetCurrentHost()
@@ -101,7 +90,7 @@ namespace Sheenam.Api.Controllers
                 Host? currentHost = this.hostService.RetrieveAllHosts()
                     .FirstOrDefault(host => host.Email.Trim().ToLower() == 
                     loginModel.Email.Trim().ToLower()
-                    && host.Password == GenerateHashPassword(loginModel.Password));
+                    && host.Password == this.passwordHashServise.GenerateHashPassword(loginModel.Password));
 
                 if(currentHost is not null)
                 {
